@@ -4,8 +4,8 @@ import React = require('react');
 import {RouteComponentProps} from 'react-router-dom';
 import {Observable} from 'rxjs';
 import {kubernetes, Workflow} from '../../../../models';
-import {EventSource, eventSourceTypes} from '../../../../models/event-source';
-import {Sensor, triggerTypes} from '../../../../models/sensor';
+import {EventSource} from '../../../../models/event-source';
+import {Sensor} from '../../../../models/sensor';
 import {uiUrl} from '../../../shared/base';
 import {ErrorNotice} from '../../../shared/components/error-notice';
 import {GraphPanel} from '../../../shared/components/graph/graph-panel';
@@ -20,17 +20,10 @@ import {services} from '../../../shared/services';
 import {EventsPanel} from '../../../workflows/components/events-panel';
 import {FullHeightLogsViewer} from '../../../workflows/components/workflow-logs-viewer/full-height-logs-viewer';
 import {buildGraph} from './build-graph';
+import {genres} from './genres';
 import {ID} from './id';
 
 require('./event-page.scss');
-
-const types = (() => {
-    const v: {[label: string]: boolean} = {sensor: true, conditions: true, workflow: true, collapsed: true};
-    Object.keys(eventSourceTypes)
-        .concat(Object.keys(triggerTypes))
-        .forEach(label => (v[label] = true));
-    return v;
-})();
 
 export const EventsPage = (props: RouteComponentProps<any>) => {
     // boiler-plate
@@ -210,7 +203,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
                     <GraphPanel
                         classNames='events'
                         graph={graph}
-                        nodeTypes={types}
+                        nodeGenres={genres}
                         nodeClassNames={{'': true, 'Pending': true, 'Ready': true, 'Running': true, 'Failed': true, 'Succeeded': true, 'Error': true}}
                         iconShapes={{workflow: 'circle', collapsed: 'circle', conditions: 'circle'}}
                         horizontal={true}

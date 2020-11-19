@@ -36,11 +36,11 @@ export const WorkflowEventBindingsList = (props: RouteComponentProps<any>) => {
     const g = new Graph();
     (workflowEventBindings || []).forEach(web => {
         const bindingId = ID.join('WorkflowEventBinding', web.metadata.namespace, web.metadata.name);
-        g.nodes.set(bindingId, {label: web.spec.event.selector, type: 'event', icon: 'cloud'});
+        g.nodes.set(bindingId, {label: web.spec.event.selector, genre: 'event', icon: 'cloud'});
         if (web.spec.submit) {
             const templateName = web.spec.submit.workflowTemplateRef.name;
             const templateId = ID.join('WorkflowTemplate', web.metadata.namespace, templateName);
-            g.nodes.set(templateId, {label: templateName, type: 'template', icon: 'window-maximize'});
+            g.nodes.set(templateId, {label: templateName, genre: 'template', icon: 'window-maximize'});
             g.edges.set({v: bindingId, w: templateId}, {});
         }
     });
@@ -87,7 +87,7 @@ export const WorkflowEventBindingsList = (props: RouteComponentProps<any>) => {
                 <>
                     <GraphPanel
                         graph={g}
-                        nodeTypes={{event: true, template: true}}
+                        nodeGenres={{event: true, template: true}}
                         nodeClassNames={{'': true}}
                         horizontal={true}
                         onNodeSelect={id => {

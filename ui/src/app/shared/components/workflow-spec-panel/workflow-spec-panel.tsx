@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {WorkflowSpec} from '../../../../models';
 import {GraphPanel} from '../graph/graph-panel';
-import {types} from './types';
+import {genres} from './genres';
 import {workflowSpecGraph} from './workflow-spec-graph';
 
 export const WorkflowSpecPanel = (props: {spec: WorkflowSpec; selectedId?: string; onSelect?: (id: string) => void}) => {
@@ -11,7 +11,7 @@ export const WorkflowSpecPanel = (props: {spec: WorkflowSpec; selectedId?: strin
             selectedNode={props.selectedId}
             onNodeSelect={id => props.onSelect && props.onSelect(id)}
             horizontal={true}
-            nodeTypes={types}
+            nodeGenres={genres}
             nodeClassNames={{'': true}}
             iconShapes={{
                 when: 'circle',

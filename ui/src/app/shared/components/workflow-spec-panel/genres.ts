@@ -1,4 +1,4 @@
-export const types: {[type: string]: boolean} = {
+export const genres: {[genre: string]: boolean} = {
     'artifacts': true,
     'container': true,
     'dag': true,

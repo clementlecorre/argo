@@ -12,16 +12,15 @@ type IconShape = 'rect' | 'circle';
 
 interface Props {
     graph: Graph;
-    classNames?: string;
-    nodeTypes: {[type: string]: boolean};
-    nodeClassNames: {[type: string]: boolean};
     options?: React.ReactNode; // add to the option panel
+    classNames?: string;
+    nodeGenres: {[type: string]: boolean};
+    nodeClassNames: {[type: string]: boolean};
     nodeSize?: number; // default "64"
     horizontal?: boolean; // default "false"
-    hideTypes?: boolean; // default "false"
-    iconShape?: IconShape; // default "rect"
+    hideNodeTypes?: boolean; // default "false"
+    defaultIconShape?: IconShape; // default "rect"
     iconShapes?: {[type: string]: Icon};
-    edgeStrokeWidthMultiple?: number; // multiple by X, default "1"
     selectedNode?: Node;
     onNodeSelect?: (id: Node) => void;
 }
@@ -31,12 +30,12 @@ export const GraphPanel = (props: Props) => {
     const [nodeSize, setNodeSize] = React.useState(props.nodeSize || defaultNodeSize);
     const [horizontal, setHorizontal] = React.useState(props.horizontal);
     const [fast, setFast] = React.useState(false);
-    const [types, setTypes] = React.useState(props.nodeTypes);
+    const [types, setTypes] = React.useState(props.nodeGenres);
     const [classNames, setClassNames] = React.useState(props.nodeClassNames);
 
     const visible = (id: Node) => {
         const label = props.graph.nodes.get(id);
-        return types[label.type] && Object.entries(classNames).find(([className, checked]) => checked && className.includes(label.classNames || ''));
+        return types[label.genre] && Object.entries(classNames).find(([className, checked]) => checked && className.includes(label.classNames || ''));
     };
 
     layout(props.graph, nodeSize, horizontal, id => !visible(id), fast);
@@ -118,7 +117,7 @@ export const GraphPanel = (props: Props) => {
                                         <path
                                             d={label.points.map((p, j) => (j === 0 ? `M ${p.x} ${p.y} ` : `L ${p.x} ${p.y}`)).join(' ')}
                                             className='line'
-                                            strokeWidth={((props.edgeStrokeWidthMultiple || 1) * nodeSize) / 32}
+                                            strokeWidth={nodeSize / 32}
                                         />
                                         <g transform={`translate(${label.points[label.points.length === 1 ? 0 : 1].x},${label.points[label.points.length === 1 ? 0 : 1].y})`}>
                                             <text className='edge-label' fontSize={nodeSize / 6}>
@@ -135,15 +134,15 @@ export const GraphPanel = (props: Props) => {
                                         <g
                                             className={`node ${label.classNames || ''} ${props.selectedNode === n ? ' selected' : ''}`}
                                             onClick={() => props.onNodeSelect && props.onNodeSelect(n)}>
-                                            {((props.iconShapes || {})[label.type] || props.iconShape) === 'circle' ? (
+                                            {((props.iconShapes || {})[label.genre] || props.defaultIconShape) === 'circle' ? (
                                                 <circle r={nodeSize / 2} className='bg' />
                                             ) : (
                                                 <rect x={-nodeSize / 2} y={-nodeSize / 2} width={nodeSize} height={nodeSize} className='bg' rx={nodeSize / 4} />
                                             )}
                                             <GraphIcon icon={label.icon} progress={label.progress} nodeSize={nodeSize} />
-                                            {props.hideTypes || (
+                                            {props.hideNodeTypes || (
                                                 <text y={nodeSize * 0.33} className='type' fontSize={(12 * nodeSize) / defaultNodeSize}>
-                                                    {label.type}
+                                                    {label.genre}
                                                 </text>
                                             )}
                                         </g>
