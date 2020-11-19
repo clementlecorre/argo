@@ -10,8 +10,7 @@ type Type = 'ADDED' | 'MODIFIED' | 'DELETED' | 'ERROR';
 type Sorter = (a: Resource, b: Resource) => number;
 
 // put the youngest at the start of the list
-export const sortByYouth: Sorter = (a: Resource, b: Resource) =>
-    a.metadata.creationTimestamp === b.metadata.creationTimestamp ? 0 : a.metadata.creationTimestamp < b.metadata.creationTimestamp ? -1 : 1;
+export const sortByYouth: Sorter = (a: Resource, b: Resource) => b.metadata.creationTimestamp.localeCompare(a.metadata.creationTimestamp);
 
 const reconnectAfterMs = 3000;
 
@@ -39,18 +38,18 @@ export class ListWatch<T extends Resource> {
     ) {
         this.onLoad = onLoad;
         this.list = list;
+        this.onChange = onChange;
+        this.onError = onError;
+        this.sorter = sorter;
         this.retryWatch = new RetryWatch<T>(
             watch,
             onOpen,
             e => {
-                this.items = mergeItem(e.object, e.type, this.items).sort(this.sorter);
+                this.items = mergeItem(e.object, e.type, this.items).sort(sorter);
                 onChange(this.items);
             },
             onError
         );
-        this.onChange = onChange;
-        this.onError = onError;
-        this.sorter = sorter;
     }
 
     // Start watching

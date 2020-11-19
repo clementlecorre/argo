@@ -89,7 +89,7 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
                     icon: phaseIcons[phase] || phaseIcons.Pending,
                     classNames: phase
                 });
-                graph.edges.set({v: triggerId, w: workflowId}, {});
+                graph.edges.set({v: triggerId, w: workflowId}, {classNames: edgeClassNames(workflowId)});
             } else if (i === 3) {
                 // use "3" to make sure we only add it once
                 const workflowGroupId = ID.join('Collapsed', workflow.metadata.namespace, triggerId);
