@@ -219,7 +219,10 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
                             const id = ID.split(x);
                             if (id.type === 'Workflow') {
                                 navigation.goto(uiUrl('workflows/' + id.namespace + '/' + id.name));
-                            } else {
+                            } else if (id.type === 'Collapsed') {
+                                setExpanded(true);
+                            }
+                            {
                                 setSelectedNode(x);
                             }
                         }}
