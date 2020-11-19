@@ -91,7 +91,7 @@ const mergeItem = <T extends Resource>(item: T, type: Type, items: T[]): T[] => 
         if (index > -1) {
             items[index] = item;
         } else {
-            items.unshift(item);
+            items.push(item);
         }
     }
     return items;

@@ -14,11 +14,11 @@ const config = {
     main: "./src/app/index.tsx"
   },
   output: {
-    filename: "[name].[chunkhash].js",
+    filename: "[name].js",
     path: __dirname + "/../../dist/app"
   },
 
-  devtool: "source-map",
+  devtool: "",
 
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json", ".ttf"]
@@ -36,7 +36,7 @@ const config = {
           /node_modules\/monaco-editor/,
         ],
         test: /\.js$/,
-        loaders: [...(isProd ? ['babel-loader'] : []), 'source-map-loader'],
+        loaders: [...(isProd ? ['babel-loader'] : ['source-map-loader'])],
       }, {
         test: /\.scss$/,
         loader: "style-loader!raw-loader!sass-loader"
