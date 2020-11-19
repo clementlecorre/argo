@@ -11,8 +11,6 @@
         "lint": "tslint --fix -p ./src/app && ./node_modules/.bin/ts-prune -p src/app/tsconfig.json -i src/models/index.ts"
     },
     "dependencies": {
-        "@babel/core": "^7.0.0-0",
-        "@fortawesome/fontawesome-free": "^5.12.0",
         "@types/dagre": "^0.7.44",
         "argo-ui": "https://github.com/argoproj/argo-ui.git",
         "chart.js": "^2.9.4",
@@ -40,9 +38,10 @@
         "swagger-ui-react": "^3.29.0"
     },
     "devDependencies": {
+        "@babel/core": "^7.0.0-0",
+        "@fortawesome/fontawesome-free": "^5.12.0",
         "@types/chart.js": "^2.9.24",
         "@types/classnames": "^2.2.3",
-        "@types/deep-equal": "^1.0.1",
         "@types/history": "^4.6.2",
         "@types/js-yaml": "^3.12.1",
         "@types/prop-types": "^15.5.2",
@@ -52,7 +51,6 @@
         "@types/react-router-dom": "^4.2.3",
         "@types/superagent": "^3.5.7",
         "@types/swagger-ui-react": "^3.23.2",
-        "@types/ws": "^4.0.0",
         "copy-webpack-plugin": "^4.3.1",
         "copyfiles": "^1.2.0",
         "file-loader": "^6.0.0",

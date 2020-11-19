@@ -90,6 +90,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
             setWorkflows(null);
             return;
         }
+        // TODO - highlight workflow when created
         const listWatch = new ListWatch<Workflow>(
             () =>
                 services.workflows.list(namespace, null, ['events.argoproj.io/trigger'], null, [

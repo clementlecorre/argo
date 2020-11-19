@@ -32,7 +32,7 @@ const config = {
       }, {
         enforce: 'pre',
         exclude: [
-          /node_modules\/react-paginate/,
+          /node_modules\/reyaract-paginate/,
           /node_modules\/monaco-editor/,
         ],
         test: /\.js$/,

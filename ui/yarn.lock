@@ -231,10 +231,6 @@
   resolved "https://registry.yarnpkg.com/@types/dagre/-/dagre-0.7.44.tgz#8f4b796b118ca29c132da7068fbc0d0351ee5851"
   integrity sha512-N6HD+79w77ZVAaVO7JJDW5yJ9LAxM62FpgNGO9xEde+KVYjDRyhIMzfiErXpr1g0JPon9kwlBzoBK6s4fOww9Q==
 
-"@types/deep-equal@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/deep-equal/-/deep-equal-1.0.1.tgz#71cfabb247c22bcc16d536111f50c0ed12476b03"
-
 "@types/events@*":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
@@ -367,13 +363,6 @@
   integrity sha512-EMD/EHdGQ6rBjfKE05x2syyw4kMZiA0qRIlv0q9EpQWYWWBhHwffSR0ljSHCy+pbX8zdOct08w8hVA0V0SAo0Q==
   dependencies:
     "@types/react" "*"
-
-"@types/ws@^4.0.0":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-4.0.2.tgz#b29037627dd7ba31ec49a4f1584840422efb856f"
-  dependencies:
-    "@types/events" "*"
-    "@types/node" "*"
 
 "@webassemblyjs/ast@1.8.5":
   version "1.8.5"

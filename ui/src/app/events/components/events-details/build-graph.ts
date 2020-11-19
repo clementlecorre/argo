@@ -68,13 +68,11 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
     (workflows || []).forEach(workflow => {
         const sensorName = workflow.metadata.labels['events.argoproj.io/sensor'];
         const triggerName = workflow.metadata.labels['events.argoproj.io/trigger'];
-        if (sensorName && triggerName) {
-            const triggerId = ID.join('Trigger', workflow.metadata.namespace, sensorName, triggerName);
-            if (!workflowGroups[triggerId]) {
-                workflowGroups[triggerId] = [];
-            }
-            workflowGroups[triggerId].push(workflow);
+        const triggerId = ID.join('Trigger', workflow.metadata.namespace, sensorName, triggerName);
+        if (!workflowGroups[triggerId]) {
+            workflowGroups[triggerId] = [];
         }
+        workflowGroups[triggerId].push(workflow);
     });
 
     Object.entries(workflowGroups).forEach(([triggerId, items]) => {
