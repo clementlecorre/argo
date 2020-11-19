@@ -15,7 +15,7 @@ interface Props {
     options?: React.ReactNode; // add to the option panel
     classNames?: string;
     nodeGenres: {[type: string]: boolean};
-    nodeClassNames: {[type: string]: boolean};
+    nodeClassNames?: {[type: string]: boolean};
     nodeSize?: number; // default "64"
     horizontal?: boolean; // default "false"
     hideNodeTypes?: boolean; // default "false"
@@ -35,7 +35,7 @@ export const GraphPanel = (props: Props) => {
 
     const visible = (id: Node) => {
         const label = props.graph.nodes.get(id);
-        return types[label.genre] && Object.entries(classNames).find(([className, checked]) => checked && className.includes(label.classNames || ''));
+        return types[label.genre] && (!classNames || Object.entries(classNames).find(([className, checked]) => checked && (label.classNames || '').split(' ').includes(className)));
     };
 
     layout(props.graph, nodeSize, horizontal, id => !visible(id), fast);
@@ -55,16 +55,18 @@ export const GraphPanel = (props: Props) => {
                         });
                     }}
                 />
-                <FilterDropDown
-                    key='class-names'
-                    values={classNames}
-                    onChange={(label, checked) => {
-                        setClassNames(v => {
-                            v[label] = checked;
-                            return Object.assign({}, v);
-                        });
-                    }}
-                />
+                {classNames && (
+                    <FilterDropDown
+                        key='class-names'
+                        values={classNames}
+                        onChange={(label, checked) => {
+                            setClassNames(v => {
+                                v[label] = checked;
+                                return Object.assign({}, v);
+                            });
+                        }}
+                    />
+                )}
                 <a onClick={() => setHorizontal(s => !s)} title='Horizontal/vertical layout'>
                     <i className={`fa ${horizontal ? 'fa-long-arrow-alt-right' : 'fa-long-arrow-alt-down'}`} />
                 </a>

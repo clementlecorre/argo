@@ -98,7 +98,7 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
                     genre: 'collapsed',
                     icon: icons.collapsed
                 });
-                graph.edges.set({v: triggerId, w: workflowGroupId}, {});
+                graph.edges.set({v: triggerId, w: workflowGroupId}, {classNames: ''});
             }
         });
     });

@@ -35,7 +35,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
     const [namespace, setNamespace] = useState(match.params.namespace);
     const [showFlow, setShowFlow] = useState(queryParams.get('showFlow') === 'true');
     const [showWorkflows, setShowWorkflows] = useState(queryParams.get('showWorkflows') === 'true');
-    const [expanded, setExpanded] = useState(queryParams.get('showWorkflows') === 'true');
+    const [expanded, setExpanded] = useState(queryParams.get('expanded') === 'true');
     const [selectedNode, setSelectedNode] = useState<Node>(queryParams.get('selectedNode'));
     const [tab, setTab] = useState<Node>(queryParams.get('tab'));
     useEffect(
@@ -90,7 +90,6 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
             setWorkflows(null);
             return;
         }
-        // TODO - highlight workflow when created
         const listWatch = new ListWatch<Workflow>(
             () =>
                 services.workflows.list(namespace, null, ['events.argoproj.io/sensor', 'events.argoproj.io/trigger'], null, [
@@ -108,7 +107,12 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
                 }),
             () => setError(null),
             () => setError(null),
-            items => setWorkflows([...items]),
+            (items, item, type) => {
+                setWorkflows([...items]);
+                if (type === 'ADDED') {
+                    markFlowing(ID.join('Workflow', item.metadata.namespace, item.metadata.name));
+                }
+            },
             setError
         );
         listWatch.start();
@@ -124,7 +128,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
                     delete evenNewerFlow[id];
                     return Object.assign({}, evenNewerFlow); // Object.assign work-around to make sure state updates
                 });
-            }, 2000);
+            }, 3000);
             return Object.assign({}, newFlow);
         });
     };

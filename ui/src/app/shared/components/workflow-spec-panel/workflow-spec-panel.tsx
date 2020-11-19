@@ -12,7 +12,6 @@ export const WorkflowSpecPanel = (props: {spec: WorkflowSpec; selectedId?: strin
             onNodeSelect={id => props.onSelect && props.onSelect(id)}
             horizontal={true}
             nodeGenres={genres}
-            nodeClassNames={{'': true}}
             iconShapes={{
                 when: 'circle',
                 withItems: 'circle',

@@ -20,7 +20,7 @@ const reconnectAfterMs = 3000;
 export class ListWatch<T extends Resource> {
     private readonly list: () => Promise<{metadata: kubernetes.ListMeta; items: T[]}>;
     private readonly onLoad: (metadata: kubernetes.ListMeta) => void;
-    private readonly onChange: (items: T[]) => void;
+    private readonly onChange: (items: T[], item?: T, type?: Type) => void;
     private readonly onError: (error: Error) => void;
     private readonly sorter: (a: T, b: T) => number;
     private items: T[];
@@ -32,7 +32,7 @@ export class ListWatch<T extends Resource> {
         watch: (resourceVersion: string) => Observable<kubernetes.WatchEvent<T>>,
         onLoad: (metadata: kubernetes.ListMeta) => void, // called when the list is loaded
         onOpen: () => void, //  called, when watches is re-established after error,  so should clear any errors
-        onChange: (items: T[]) => void, // called whenever items change, any users that changes state should use [...items]
+        onChange: (items: T[], item?: T, type?: Type) => void, // called whenever items change, any users that changes state should use [...items]
         onError: (error: Error) => void, // called on any error
         sorter: Sorter = sortByYouth // show the youngest first by default
     ) {
@@ -46,7 +46,7 @@ export class ListWatch<T extends Resource> {
             onOpen,
             e => {
                 this.items = mergeItem(e.object, e.type, this.items).sort(sorter);
-                onChange(this.items);
+                onChange(this.items, e.object, e.type);
             },
             onError
         );
