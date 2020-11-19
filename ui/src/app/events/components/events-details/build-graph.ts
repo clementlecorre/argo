@@ -92,7 +92,7 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
             } else {
                 const workflowGroupId = ID.join('Collapsed', workflow.metadata.namespace, triggerId);
                 graph.nodes.set(workflowGroupId, {
-                    label: workflows.length - 5 + ' hidden workflows',
+                    label: workflows.length - 5 + ' hidden workflow(s)',
                     type: 'collapsed',
                     icon: icons.Collapsed
                 });

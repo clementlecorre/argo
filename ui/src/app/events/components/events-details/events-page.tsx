@@ -221,8 +221,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
                                 navigation.goto(uiUrl('workflows/' + id.namespace + '/' + id.name));
                             } else if (id.type === 'Collapsed') {
                                 setExpanded(true);
-                            }
-                            {
+                            } else {
                                 setSelectedNode(x);
                             }
                         }}
