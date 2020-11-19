@@ -13,8 +13,9 @@ const status = (r: {status?: {conditions?: Condition[]}}) => {
     return !!r.status.conditions.find(c => c.status !== 'True') ? 'Pending' : 'Ready';
 };
 
-export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workflows: Workflow[], flow: {[p: string]: any}, expanded: boolean) => {
-    const edgeClassNames = (id: Node) => (!!flow[id] ? 'flow' : '');
+export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workflows: Workflow[], flow: {[p: string]: {count: number; timeout?: any}}, expanded: boolean) => {
+    const edgeLabel = (id: Node, label?: string) => (!!flow[id] ? (label || '') + ' (' + flow[id].count + ')' : label);
+    const edgeClassNames = (id: Node) => (!!flow[id] && flow[id].timeout ? 'flow' : '');
     const graph = new Graph();
 
     (eventSources || []).forEach(eventSource => {
@@ -33,7 +34,7 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
         graph.nodes.set(sensorId, {genre: 'sensor', label: sensor.metadata.name, icon: icons.sensor, classNames: status(sensor)});
         (sensor.spec.dependencies || []).forEach(d => {
             const eventId = ID.join('EventSource', sensor.metadata.namespace, d.eventSourceName, d.eventName);
-            graph.edges.set({v: eventId, w: sensorId}, {label: d.name, classNames: edgeClassNames(eventId)});
+            graph.edges.set({v: eventId, w: sensorId}, {label: edgeLabel(eventId, d.name), classNames: edgeClassNames(eventId)});
         });
         (sensor.spec.triggers || [])
             .map(t => t.template)
@@ -55,10 +56,10 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
                         icon: icons.conditions,
                         classNames: ''
                     });
-                    graph.edges.set({v: sensorId, w: conditionsId}, {classNames: edgeClassNames(sensorId)});
-                    graph.edges.set({v: conditionsId, w: triggerId}, {classNames: edgeClassNames(triggerId)});
+                    graph.edges.set({v: sensorId, w: conditionsId}, {label: edgeLabel(sensorId), classNames: edgeClassNames(sensorId)});
+                    graph.edges.set({v: conditionsId, w: triggerId}, {label: edgeLabel(triggerId), classNames: edgeClassNames(triggerId)});
                 } else {
-                    graph.edges.set({v: sensorId, w: triggerId}, {classNames: edgeClassNames(triggerId)});
+                    graph.edges.set({v: sensorId, w: triggerId}, {label: edgeLabel(triggerId), classNames: edgeClassNames(triggerId)});
                 }
             });
     });

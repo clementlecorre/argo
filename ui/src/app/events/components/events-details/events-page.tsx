@@ -58,7 +58,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
     const [eventSources, setEventSources] = useState<EventSource[]>();
     const [sensors, setSensors] = useState<Sensor[]>();
     const [workflows, setWorkflows] = useState<Workflow[]>();
-    const [flow, setFlow] = useState<{[id: string]: any}>({}); // event flowing?
+    const [flow, setFlow] = useState<{[id: string]: {count: number; timeout?: any}}>({}); // event flowing?
 
     // when namespace changes, we must reload
     useEffect(() => {
@@ -122,10 +122,14 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
     const markFlowing = (id: Node) => {
         setError(null);
         setFlow(newFlow => {
-            clearTimeout(newFlow[id]);
-            newFlow[id] = setTimeout(() => {
+            if (!newFlow[id]) {
+                newFlow[id] = {count: 0};
+            }
+            clearTimeout(newFlow[id].timeout);
+            newFlow[id].count++;
+            newFlow[id].timeout = setTimeout(() => {
                 setFlow(evenNewerFlow => {
-                    delete evenNewerFlow[id];
+                    delete evenNewerFlow[id].timeout;
                     return Object.assign({}, evenNewerFlow); // Object.assign work-around to make sure state updates
                 });
             }, 3000);
@@ -137,7 +141,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
             return;
         }
         const sub = services.eventSource
-            .eventSourcesLogs(namespace, '', '', '', 'dispatching', 0)
+            .eventSourcesLogs(namespace, '', '', '', 'dispatching.*event', 0)
             .filter(e => !!e && !!e.eventSourceName)
             .subscribe(e => markFlowing(ID.join('EventSource', e.namespace, e.eventSourceName, e.eventName)), setError);
         return () => sub.unsubscribe();
