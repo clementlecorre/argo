@@ -1,6 +1,6 @@
 import {Condition, Workflow} from '../../../../models';
-import {EventSource, EventSourceType, EventSourceTypes} from '../../../../models/event-source';
-import {Sensor, TriggerType, TriggerTypes} from '../../../../models/sensor';
+import {EventSource, EventSourceType} from '../../../../models/event-source';
+import {Sensor, TriggerType} from '../../../../models/sensor';
 import {Graph, Node} from '../../../shared/components/graph/types';
 import {icons as phaseIcons} from '../../../workflows/components/workflow-dag/icons';
 import {icons} from './icons';
@@ -12,9 +12,6 @@ const status = (r: {status?: {conditions?: Condition[]}}) => {
     }
     return !!r.status.conditions.find(c => c.status !== 'True') ? 'Pending' : 'Ready';
 };
-
-export const NodeTypes = ['sensor', 'conditions', 'workflow', 'collapsed'].concat(EventSourceTypes.map(x => x + 'EventSource')).concat(TriggerTypes.map(x => x + 'Trigger'));
-export type NodeType = typeof NodeTypes[number];
 
 export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workflows: Workflow[], flow: {[p: string]: any}, expanded: boolean) => {
     const edgeClassNames = (id: Node) => (!!flow[id] ? 'flow' : '');
@@ -82,7 +79,10 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
 
     Object.entries(workflowGroups).forEach(([triggerId, items]) => {
         items.forEach((workflow, i) => {
-            if (expanded || items.length <= 5 || i < 2 || i >= items.length - 3) {
+            // we always add workflows if:
+            // 1. We are showing expanded view.
+            // 2. The workflow is amongst the first 2 or last 2 in the list.
+            if (expanded || i < 2 || i >= items.length - 3) {
                 const workflowId = ID.join('Workflow', workflow.metadata.namespace, workflow.metadata.name);
                 const phase = workflow.metadata.labels['workflows.argoproj.io/phase'];
                 graph.nodes.set(workflowId, {
@@ -92,7 +92,8 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
                     classNames: phase
                 });
                 graph.edges.set({v: triggerId, w: workflowId}, {});
-            } else {
+            } else if (i === 3) {
+                // use "3" to make sure we only add it once
                 const workflowGroupId = ID.join('Collapsed', workflow.metadata.namespace, triggerId);
                 graph.nodes.set(workflowGroupId, {
                     label: workflows.length - 5 + ' hidden workflow(s)',

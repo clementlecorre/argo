@@ -13,7 +13,7 @@ export interface WorkflowDagRenderOptions {
     expandNodes: Set<string>;
 }
 
-export interface WorkflowDagProps {
+interface WorkflowDagProps {
     workflowName: string;
     nodes: {[nodeId: string]: NodeStatus};
     selectedNodeId?: string;

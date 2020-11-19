@@ -9,17 +9,16 @@ import {ErrorNotice} from '../../../shared/components/error-notice';
 import {Loading} from '../../../shared/components/loading';
 import {ResourceEditor} from '../../../shared/components/resource-editor/resource-editor';
 import {services} from '../../../shared/services';
-import {
-    WorkflowArtifacts,
-    WorkflowLogsViewer,
-    WorkflowNodeInfo,
-    WorkflowPanel,
-    WorkflowParametersPanel,
-    WorkflowSummaryPanel,
-    WorkflowTimeline,
-    WorkflowYamlViewer
-} from '../../../workflows/components';
+import {WorkflowArtifacts} from '../../../workflows/components/workflow-artifacts';
+
 import {WorkflowResourcePanel} from '../../../workflows/components/workflow-details/workflow-resource-panel';
+import {WorkflowLogsViewer} from '../../../workflows/components/workflow-logs-viewer/workflow-logs-viewer';
+import {WorkflowNodeInfo} from '../../../workflows/components/workflow-node-info/workflow-node-info';
+import {WorkflowPanel} from '../../../workflows/components/workflow-panel/workflow-panel';
+import {WorkflowParametersPanel} from '../../../workflows/components/workflow-parameters-panel';
+import {WorkflowSummaryPanel} from '../../../workflows/components/workflow-summary-panel';
+import {WorkflowTimeline} from '../../../workflows/components/workflow-timeline/workflow-timeline';
+import {WorkflowYamlViewer} from '../../../workflows/components/workflow-yaml-viewer/workflow-yaml-viewer';
 
 require('../../../workflows/components/workflow-details/workflow-details.scss');
 

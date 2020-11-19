@@ -43,7 +43,7 @@ const AttributeRows = (props: {attributes: {title: string; value: any}[]}) => (
     </div>
 );
 
-export const WorkflowNodeSummary = (props: Props) => {
+const WorkflowNodeSummary = (props: Props) => {
     const attributes = [
         {title: 'NAME', value: props.node.name},
         {title: 'TYPE', value: props.node.type},
@@ -143,7 +143,7 @@ export const WorkflowNodeSummary = (props: Props) => {
     );
 };
 
-export const WorkflowNodeInputs = (props: {inputs: models.Inputs}) => {
+const WorkflowNodeInputs = (props: {inputs: models.Inputs}) => {
     const parameters = (props.inputs.parameters || []).map(artifact => ({
         title: artifact.name,
         value: artifact.value
@@ -176,7 +176,7 @@ function hasEnv(container: models.kubernetes.Container | models.Sidecar | models
     return (container as models.kubernetes.Container | models.Sidecar).env !== undefined;
 }
 
-export const WorkflowNodeContainer = (props: {
+const WorkflowNodeContainer = (props: {
     nodeId: string;
     container: models.kubernetes.Container | models.Sidecar | models.Script;
     onShowContainerLogs: (nodeId: string, container: string) => any;
@@ -215,7 +215,7 @@ export const WorkflowNodeContainer = (props: {
     );
 };
 
-export class WorkflowNodeContainers extends React.Component<Props, {selectedSidecar: string}> {
+class WorkflowNodeContainers extends React.Component<Props, {selectedSidecar: string}> {
     constructor(props: Props) {
         super(props);
         this.state = {selectedSidecar: null};
@@ -253,7 +253,7 @@ export class WorkflowNodeContainers extends React.Component<Props, {selectedSide
     }
 }
 
-export const WorkflowNodeArtifacts = (props: Props) => {
+const WorkflowNodeArtifacts = (props: Props) => {
     const artifacts =
         (props.node.outputs &&
             props.node.outputs.artifacts &&

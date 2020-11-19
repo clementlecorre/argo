@@ -4,8 +4,6 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import {RouteComponentProps} from 'react-router';
 
-import {WorkflowArtifacts, WorkflowLogsViewer, WorkflowNodeInfo, WorkflowPanel, WorkflowSummaryPanel, WorkflowTimeline, WorkflowYamlViewer} from '..';
-
 import {Link, Workflow} from '../../../../models';
 import {uiUrl} from '../../../shared/base';
 import {CostOptimisationNudge} from '../../../shared/components/cost-optimisation-nudge';
@@ -19,7 +17,14 @@ import {services} from '../../../shared/services';
 import * as Operations from '../../../shared/workflow-operations-map';
 import {WorkflowOperationAction, WorkflowOperationName, WorkflowOperations} from '../../../shared/workflow-operations-map';
 import {EventsPanel} from '../events-panel';
+import {WorkflowArtifacts} from '../workflow-artifacts';
+import {WorkflowLogsViewer} from '../workflow-logs-viewer/workflow-logs-viewer';
+import {WorkflowNodeInfo} from '../workflow-node-info/workflow-node-info';
+import {WorkflowPanel} from '../workflow-panel/workflow-panel';
 import {WorkflowParametersPanel} from '../workflow-parameters-panel';
+import {WorkflowSummaryPanel} from '../workflow-summary-panel';
+import {WorkflowTimeline} from '../workflow-timeline/workflow-timeline';
+import {WorkflowYamlViewer} from '../workflow-yaml-viewer/workflow-yaml-viewer';
 import {WorkflowResourcePanel} from './workflow-resource-panel';
 
 require('./workflow-details.scss');

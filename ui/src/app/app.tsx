@@ -38,7 +38,7 @@ const loginUrl = uiUrl('login');
 const timelineUrl = uiUrl('timeline');
 const reportsUrl = uiUrl('reports');
 
-export const history = createBrowserHistory();
+const history = createBrowserHistory();
 
 const navItems = [
     {

@@ -9,8 +9,6 @@ interface Resource {
 type Type = 'ADDED' | 'MODIFIED' | 'DELETED' | 'ERROR';
 type Sorter = (a: Resource, b: Resource) => number;
 
-// alphabetical name order
-export const sortByName: Sorter = (a: Resource, b: Resource) => (a.metadata.name > b.metadata.name ? -1 : 1);
 // put the youngest at the start of the list
 export const sortByYouth: Sorter = (a: Resource, b: Resource) =>
     a.metadata.creationTimestamp === b.metadata.creationTimestamp ? 0 : a.metadata.creationTimestamp < b.metadata.creationTimestamp ? -1 : 1;
@@ -19,8 +17,6 @@ const reconnectAfterMs = 3000;
 
 /**
  * ListWatch allows you to start watching for changes, automatically reconnecting on error.
- *
- * Items are sorted by creation timestamp.
  */
 export class ListWatch<T extends Resource> {
     private readonly list: () => Promise<{metadata: kubernetes.ListMeta; items: T[]}>;
@@ -39,7 +35,7 @@ export class ListWatch<T extends Resource> {
         onOpen: () => void, //  called, when watches is re-established after error,  so should clear any errors
         onChange: (items: T[]) => void, // called whenever items change, any users that changes state should use [...items]
         onError: (error: Error) => void, // called on any error
-        sorter: Sorter = sortByName
+        sorter: Sorter = sortByYouth // show the youngest first by default
     ) {
         this.onLoad = onLoad;
         this.list = list;
