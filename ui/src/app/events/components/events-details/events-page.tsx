@@ -25,7 +25,7 @@ import {ID} from './id';
 require('./event-page.scss');
 
 const types = (() => {
-    const v: {[label: string]: boolean} = {sensor: true, conditions: true, workflow: true};
+    const v: {[label: string]: boolean} = {sensor: true, conditions: true, workflow: true, collapsed: true};
     Object.keys(eventSourceTypes)
         .concat(Object.keys(triggerTypes))
         .forEach(label => (v[label] = true));
@@ -42,6 +42,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
     const [namespace, setNamespace] = useState(match.params.namespace);
     const [showFlow, setShowFlow] = useState(queryParams.get('showFlow') === 'true');
     const [showWorkflows, setShowWorkflows] = useState(queryParams.get('showWorkflows') === 'true');
+    const [expanded, setExpanded] = useState(queryParams.get('showWorkflows') === 'true');
     const [selectedNode, setSelectedNode] = useState<Node>(queryParams.get('selectedNode'));
     const [tab, setTab] = useState<Node>(queryParams.get('tab'));
     useEffect(
@@ -51,11 +52,12 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
                     namespace,
                     showFlow,
                     showWorkflows,
+                    expanded,
                     selectedNode,
                     tab
                 })
             ),
-        [namespace, showFlow, showWorkflows, selectedNode, tab]
+        [namespace, showFlow, showWorkflows, expanded, expanded, tab]
     );
 
     // internal state
@@ -119,6 +121,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
     }, [namespace, showWorkflows]);
     // follow logs and mark flow
     const markFlowing = (id: Node) => {
+        setError(null);
         setFlow(newFlow => {
             clearTimeout(newFlow[id]);
             newFlow[id] = setTimeout(() => {
@@ -156,7 +159,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
         return () => sub.unsubscribe();
     }, [namespace, showFlow]);
 
-    const graph = buildGraph(eventSources, sensors, workflows, flow);
+    const graph = buildGraph(eventSources, sensors, workflows, flow, expanded);
 
     const selected = (() => {
         if (!selectedNode) {
@@ -184,6 +187,11 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
                             action: () => setShowWorkflows(!showWorkflows),
                             iconClassName: showWorkflows ? 'fa fa-toggle-on' : 'fa fa-toggle-off',
                             title: 'Show workflows'
+                        },
+                        {
+                            action: () => setExpanded(!expanded),
+                            iconClassName: expanded ? 'fa fa-compress' : 'fa fa-expand',
+                            title: 'Collapse/expand hidden nodes'
                         }
                     ]
                 },
@@ -204,7 +212,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
                         graph={graph}
                         nodeTypes={types}
                         nodeClassNames={{'': true, 'Pending': true, 'Ready': true, 'Running': true, 'Failed': true, 'Succeeded': true, 'Error': true}}
-                        iconShapes={{workflow: 'circle', conditions: 'circle'}}
+                        iconShapes={{workflow: 'circle', collapsed: 'circle', conditions: 'circle'}}
                         horizontal={true}
                         selectedNode={selectedNode}
                         onNodeSelect={x => {

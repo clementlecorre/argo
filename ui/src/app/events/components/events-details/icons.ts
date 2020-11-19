@@ -15,6 +15,7 @@ export const icons: {[type: string]: Icon} = {
     ArgoWorkflowTrigger: 'sitemap',
     AzureEventsHubEventSource: storage,
     CalendarEventSource: 'clock',
+    Collapsed: 'ellipsis-h', // hidden nodes
     Conditions: 'filter', // special type
     CustomTrigger: 'puzzle-piece',
     EmitterEventSource: queue,

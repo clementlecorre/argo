@@ -13,7 +13,7 @@ const status = (r: {status?: {conditions?: Condition[]}}) => {
     return !!r.status.conditions.find(c => c.status !== 'True') ? 'Pending' : 'Ready';
 };
 
-export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workflows: Workflow[], flow: {[id: string]: any}) => {
+export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workflows: Workflow[], flow: {[p: string]: any}, expanded: boolean) => {
     const edgeClassNames = (id: Node) => (!!flow[id] ? 'flow' : '');
     const graph = new Graph();
 
@@ -63,16 +63,42 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
             });
     });
 
+    const workflowGroups: {[triggerId: string]: Workflow[]} = {};
+
     (workflows || []).forEach(workflow => {
         const sensorName = workflow.metadata.labels['events.argoproj.io/sensor'];
         const triggerName = workflow.metadata.labels['events.argoproj.io/trigger'];
-        const phase = workflow.metadata.labels['workflows.argoproj.io/phase'];
         if (sensorName && triggerName) {
-            const workflowId = ID.join('Workflow', workflow.metadata.namespace, workflow.metadata.name);
-            graph.nodes.set(workflowId, {label: workflow.metadata.name, type: 'workflow', icon: phaseIcons[phase] || phaseIcons.Pending, classNames: phase});
             const triggerId = ID.join('Trigger', workflow.metadata.namespace, sensorName, triggerName);
-            graph.edges.set({v: triggerId, w: workflowId}, {});
+            if (!workflowGroups[triggerId]) {
+                workflowGroups[triggerId] = [];
+            }
+            workflowGroups[triggerId].push(workflow);
         }
+    });
+
+    Object.entries(workflowGroups).forEach(([triggerId, items]) => {
+        items.forEach((workflow, i) => {
+            if (expanded || items.length <= 5 || i < 2 || i >= items.length - 3) {
+                const workflowId = ID.join('Workflow', workflow.metadata.namespace, workflow.metadata.name);
+                const phase = workflow.metadata.labels['workflows.argoproj.io/phase'];
+                graph.nodes.set(workflowId, {
+                    label: workflow.metadata.name,
+                    type: 'workflow',
+                    icon: phaseIcons[phase] || phaseIcons.Pending,
+                    classNames: phase
+                });
+                graph.edges.set({v: triggerId, w: workflowId}, {});
+            } else {
+                const workflowGroupId = ID.join('Collapsed', workflow.metadata.namespace, triggerId);
+                graph.nodes.set(workflowGroupId, {
+                    label: workflows.length - 5 + ' hidden workflows',
+                    type: 'collapsed',
+                    icon: icons.Collapsed
+                });
+                graph.edges.set({v: triggerId, w: workflowGroupId}, {});
+            }
+        });
     });
 
     return graph;
