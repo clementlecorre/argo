@@ -32,7 +32,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
     const queryParams = new URLSearchParams(location.search);
 
     // state for URL and query parameters
-    const [namespace, setNamespace] = useState(match.params.namespace);
+    const [namespace, setNamespace] = useState(match.params.namespace || '');
     const [showFlow, setShowFlow] = useState(queryParams.get('showFlow') === 'true');
     const [showWorkflows, setShowWorkflows] = useState(queryParams.get('showWorkflows') === 'true');
     const [expanded, setExpanded] = useState(queryParams.get('expanded') === 'true');

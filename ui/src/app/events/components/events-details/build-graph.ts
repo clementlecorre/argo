@@ -13,6 +13,7 @@ const status = (r: {status?: {conditions?: Condition[]}}) => {
     return !!r.status.conditions.find(c => c.status !== 'True') ? 'Pending' : 'Ready';
 };
 
+const numNodesToHide = 2;
 export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workflows: Workflow[], flow: {[p: string]: {count: number; timeout?: any}}, expanded: boolean) => {
     const edgeLabel = (id: Node, label?: string) => (!!flow[id] ? (label || '') + ' (' + flow[id].count + ')' : label);
     const edgeClassNames = (id: Node) => (!!flow[id] && flow[id].timeout ? 'flow' : '');
@@ -80,8 +81,9 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
         items.forEach((workflow, i) => {
             // we always add workflows if:
             // 1. We are showing expanded view.
-            // 2. The workflow is amongst the first 2 or last 2 in the list.
-            if (expanded || i < 2 || i >= items.length - 3) {
+            // 2. The workflow is amongst the first 2 in the list.
+            // 3. We're showing <= 3 workflows.
+            if (expanded || i < numNodesToHide || items.length <= numNodesToHide + 1) {
                 const workflowId = ID.join('Workflow', workflow.metadata.namespace, workflow.metadata.name);
                 const phase = workflow.metadata.labels['workflows.argoproj.io/phase'];
                 graph.nodes.set(workflowId, {
@@ -91,11 +93,11 @@ export const buildGraph = (eventSources: EventSource[], sensors: Sensor[], workf
                     classNames: phase
                 });
                 graph.edges.set({v: triggerId, w: workflowId}, {classNames: edgeClassNames(workflowId)});
-            } else if (i === 3) {
+            } else if (i === numNodesToHide) {
                 // use "3" to make sure we only add it once
                 const workflowGroupId = ID.join('Collapsed', workflow.metadata.namespace, triggerId);
                 graph.nodes.set(workflowGroupId, {
-                    label: workflows.length - 5 + ' hidden workflow(s)',
+                    label: workflows.length - numNodesToHide + ' hidden workflow(s)',
                     genre: 'collapsed',
                     icon: icons.collapsed
                 });

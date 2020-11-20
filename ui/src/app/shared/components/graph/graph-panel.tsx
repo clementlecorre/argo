@@ -149,7 +149,7 @@ export const GraphPanel = (props: Props) => {
                                             )}
                                         </g>
                                         <g transform={`translate(0,${(nodeSize * 3) / 4})`}>
-                                            <text className='node-label' fontSize={(16 * nodeSize) / defaultNodeSize}>
+                                            <text className='node-label' fontSize={(18 * nodeSize) / defaultNodeSize}>
                                                 {formatLabel(label.label)}
                                             </text>
                                         </g>

@@ -26,10 +26,11 @@ export const WorkflowTemplateList = (props: RouteComponentProps<any>) => {
     const {navigation} = useContext(Context);
 
     // state for URL and query parameters
-    const [namespace, setNamespace] = useState(match.params.namespace);
+    const [namespace, setNamespace] = useState(match.params.namespace || '');
     const [sidePanel, setSidePanel] = useState(queryParams.get('sidePanel') === 'true');
     useEffect(() => history.push(historyUrl('workflow-templates/{namespace}', {namespace, sidePanel})), [namespace, sidePanel]);
 
+    // internal state
     const [error, setError] = useState<Error>();
     const [templates, setTemplates] = useState<WorkflowTemplate[]>();
 

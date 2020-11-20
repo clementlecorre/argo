@@ -75,7 +75,7 @@ export const Utils = {
     },
 
     setCurrentNamespace(value: string): void {
-        if (value) {
+        if (value != null) {
             localStorage.setItem('current_namespace', value);
             this.onNamespaceChange(value);
         }

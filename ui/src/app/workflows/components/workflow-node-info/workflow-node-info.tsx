@@ -126,6 +126,7 @@ const WorkflowNodeSummary = (props: Props) => {
                         .filter(link => link.scope === 'pod')
                         .map(link => (
                             <Button
+                                key={link.url}
                                 icon='link'
                                 type='Secondary'
                                 onClick={() =>

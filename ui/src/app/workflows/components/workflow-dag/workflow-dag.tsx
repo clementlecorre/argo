@@ -63,7 +63,7 @@ export class WorkflowDag extends React.Component<WorkflowDagProps, WorkflowDagRe
                 graph={this.graph}
                 nodeGenres={genres}
                 nodeClassNames={classNames}
-                nodeSize={40}
+                nodeSize={32}
                 defaultIconShape='circle'
                 hideNodeTypes={true}
                 selectedNode={this.props.selectedNodeId}

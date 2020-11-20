@@ -23,7 +23,7 @@ export const WorkflowEventBindingsList = (props: RouteComponentProps<any>) => {
     const queryParams = new URLSearchParams(location.search);
 
     // state for URL and query parameters
-    const [namespace, setNamespace] = useState(match.params.namespace);
+    const [namespace, setNamespace] = useState(match.params.namespace || '');
     const [selectedWorkflowEventBinding, setSelectedWorkflowEventBinding] = useState(queryParams.get('selectedWorkflowEventBinding'));
     useEffect(() => history.push(historyUrl('workflow-event-bindings/{namespace}', {namespace, selectedWorkflowEventBinding})), [namespace, selectedWorkflowEventBinding]);
 
