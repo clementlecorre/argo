@@ -120,6 +120,9 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
     }, [namespace, showWorkflows]);
     // follow logs and mark flow
     const markFlowing = (id: Node) => {
+        if (!flow) {
+            return;
+        }
         setError(null);
         setFlow(newFlow => {
             if (!newFlow[id]) {

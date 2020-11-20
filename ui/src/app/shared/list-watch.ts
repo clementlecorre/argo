@@ -81,7 +81,7 @@ export class ListWatch<T extends Resource> {
  * This is used to update (or delete) and item in a the list.
  */
 const mergeItem = <T extends Resource>(item: T, type: Type, items: T[]): T[] => {
-    const index = items.findIndex(x => x.metadata.uid === item.metadata.uid);
+    const index = items.findIndex(x => x.metadata.namespace === item.metadata.namespace && x.metadata.name === item.metadata.name);
     if (type === 'DELETED') {
         if (index > -1) {
             items.splice(index, 1);

@@ -50,19 +50,19 @@ export const AppRouter = (props: {popupManager: PopupManager; history: H.History
     useEffect(() => {
         const sub = props.popupManager.popupProps.subscribe(setPopupProps);
         return () => sub.unsubscribe();
-    });
+    }, []);
     useEffect(() => {
         services.info
             .getVersion()
             .then(setVersion)
             .catch(setError);
-    });
+    }, []);
     useEffect(() => {
         services.info
             .getInfo()
             .then(info => setNamespace(info.managedNamespace || Utils.getCurrentNamespace() || ''))
             .catch(setError);
-    });
+    }, []);
 
     return (
         <>
