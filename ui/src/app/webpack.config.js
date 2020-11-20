@@ -14,7 +14,7 @@ const config = {
     main: "./src/app/index.tsx"
   },
   output: {
-    filename: "[name].js",
+    filename: "[name].[chunkhash].js",
     path: __dirname + "/../../dist/app"
   },
 

@@ -6,7 +6,6 @@ import {WorkflowTemplate} from '../../../../models';
 import {uiUrl} from '../../../shared/base';
 import {ErrorNotice} from '../../../shared/components/error-notice';
 import {ExampleManifests} from '../../../shared/components/example-manifests';
-import {Loading} from '../../../shared/components/loading';
 import {NamespaceFilter} from '../../../shared/components/namespace-filter';
 import {Timestamp} from '../../../shared/components/timestamp';
 import {ZeroState} from '../../../shared/components/zero-state';
@@ -57,10 +56,8 @@ export const WorkflowTemplateList = (props: RouteComponentProps<any>) => {
                 },
                 tools: [<NamespaceFilter key='namespace-filter' value={namespace} onChange={setNamespace} />]
             }}>
-            <ErrorNotice error={error} style={{margin: 20}} />;
-            {!templates ? (
-                <Loading />
-            ) : templates.length === 0 ? (
+            <ErrorNotice error={error} style={{margin: 20}} />
+            {!templates || templates.length === 0 ? (
                 <ZeroState title='No workflow templates'>
                     <p>You can create new templates here or using the CLI.</p>
                     <p>

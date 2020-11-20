@@ -42,7 +42,7 @@ export const AppRouter = (props: {popupManager: PopupManager; history: H.History
     const [namespace, setNamespace] = useState<string>();
     const setError = (error: Error) => {
         props.notificationsManager.show({
-            content: 'Failed to load ' + error,
+            content: 'Failed to load version/info ' + error,
             type: NotificationType.Error
         });
     };
@@ -53,14 +53,10 @@ export const AppRouter = (props: {popupManager: PopupManager; history: H.History
     }, []);
     useEffect(() => {
         services.info
-            .getVersion()
-            .then(setVersion)
-            .catch(setError);
-    }, []);
-    useEffect(() => {
-        services.info
             .getInfo()
             .then(info => setNamespace(info.managedNamespace || Utils.getCurrentNamespace() || ''))
+            .then(() => services.info.getVersion())
+            .then(setVersion)
             .catch(setError);
     }, []);
 

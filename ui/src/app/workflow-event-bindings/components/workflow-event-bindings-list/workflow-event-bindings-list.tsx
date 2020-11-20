@@ -58,7 +58,7 @@ export const WorkflowEventBindingsList = (props: RouteComponentProps<any>) => {
             toolbar={{
                 tools: [<NamespaceFilter key='namespace-filter' value={namespace} onChange={setNamespace} />]
             }}>
-            <ErrorNotice error={error} />
+            <ErrorNotice error={error} style={{margin: 20}} />
             {!workflowEventBindings ? (
                 <Loading />
             ) : workflowEventBindings.length === 0 ? (

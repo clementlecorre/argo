@@ -203,7 +203,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
                 },
                 tools: [<NamespaceFilter key='namespace-filter' value={namespace} onChange={setNamespace} />]
             }}>
-            <ErrorNotice error={error} />
+            <ErrorNotice error={error} style={{margin: 20}} />
             {graph.nodes.size === 0 ? (
                 <ZeroState>
                     <p>Argo Events allow you to trigger workflows, lambadas, and other actions when an event such as a webhooks, message, or a cron schedule occurs.</p>
