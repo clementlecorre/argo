@@ -213,6 +213,7 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
             metadata =>
                 this.setState(
                     {
+                        error: null,
                         namespace,
                         pagination: {offset: pagination.offset, limit: pagination.limit, nextOffset: metadata.continue},
                         selectedPhases,

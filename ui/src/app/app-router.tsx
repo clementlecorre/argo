@@ -130,9 +130,6 @@ export const AppRouter = (props: {popupManager: PopupManager; history: H.History
                     <Notifications notifications={props.notificationsManager.notifications} />
                     <ErrorBoundary>
                         <Switch>
-                            <Route exact={true} strict={true} path={uiUrl('')}>
-                                <Redirect to={workflowsUrl} />
-                            </Route>
                             <Route exact={true} strict={true} path={timelineUrl}>
                                 <Redirect to={workflowsUrl} />
                             </Route>
@@ -148,6 +145,7 @@ export const AppRouter = (props: {popupManager: PopupManager; history: H.History
                             <Route exact={true} strict={true} path={apiDocsUrl} component={apidocs.component} />
                             <Route exact={true} strict={true} path={userInfoUrl} component={userinfo.component} />
                             <Route exact={true} strict={true} path={loginUrl} component={login.component} />
+                            {namespace && <Redirect to={workflowsUrl + '/' + namespace} />}
                         </Switch>
                     </ErrorBoundary>
                 </Layout>

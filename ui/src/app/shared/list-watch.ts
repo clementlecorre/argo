@@ -70,9 +70,10 @@ export class ListWatch<T extends Resource> {
     }
 
     // Stop watching.
-    // You should almost always  invoke on component unload.
+    // Must invoke on component unload.
     // Idempotent.
     public stop() {
+        clearTimeout(this.timeout);
         this.retryWatch.stop();
     }
 }
