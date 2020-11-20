@@ -20,5 +20,5 @@ export const historyUrl = (path: string, params: {[key: string]: any}) => {
                 Utils.setCurrentNamespace(v);
             }
         });
-    return uiUrl(path) + '?' + queryParams.join('&');
+    return uiUrl(path.replace(/{[^}]*}/g, '')) + '?' + queryParams.join('&');
 };

@@ -3,7 +3,7 @@ import {Icon} from '../icon';
 export type Node = string;
 type NodeGroup = string;
 
-interface NodeLabel {
+export interface NodeLabel {
     label: string; // the label of the node - placed below the icon
     genre: string; // the class or type of the node, displayed below the icon
     icon?: Icon;
