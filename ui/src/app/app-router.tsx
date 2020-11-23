@@ -14,6 +14,7 @@ import help from './help';
 import login from './login';
 import reports from './reports';
 import {uiUrl} from './shared/base';
+import {ChatButton} from './shared/components/chat-button';
 import ErrorBoundary from './shared/components/error-boundary';
 import {services} from './shared/services';
 import {Utils} from './shared/utils';
@@ -144,6 +145,7 @@ export const AppRouter = (props: {popupManager: PopupManager; history: H.History
                             {namespace && <Redirect to={workflowsUrl + '/' + namespace} />}
                         </Switch>
                     </ErrorBoundary>
+                    <ChatButton />
                 </Layout>
             </Router>
         </>
