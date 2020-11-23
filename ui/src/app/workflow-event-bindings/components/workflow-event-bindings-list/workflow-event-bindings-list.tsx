@@ -86,6 +86,7 @@ export const WorkflowEventBindingsList = (props: RouteComponentProps<any>) => {
             ) : (
                 <>
                     <GraphPanel
+                        storageScope='workflow-event-bindings'
                         graph={g}
                         nodeGenres={{event: true, template: true}}
                         horizontal={true}

@@ -214,6 +214,7 @@ export const EventsPage = (props: RouteComponentProps<any>) => {
             ) : (
                 <>
                     <GraphPanel
+                        storageScope='events'
                         classNames='events'
                         graph={graph}
                         nodeGenres={genres}

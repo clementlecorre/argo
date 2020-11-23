@@ -1,4 +1,6 @@
 import * as React from 'react';
+import {useEffect} from 'react';
+import {ScopedLocalStorage} from '../../scoped-local-storage';
 import {FilterDropDown} from '../filter-drop-down';
 import {Icon} from '../icon';
 import {GraphIcon} from './icon';
@@ -10,12 +12,21 @@ require('./graph-panel.scss');
 
 type IconShape = 'rect' | 'circle';
 
+interface NodeGenres {
+    [type: string]: boolean;
+}
+
+interface NodeClassNames {
+    [type: string]: boolean;
+}
+
 interface Props {
     graph: Graph;
+    storageScope: string; // the scope of storage, similar graphs should use the same vaulue
     options?: React.ReactNode; // add to the option panel
     classNames?: string;
-    nodeGenres: {[type: string]: boolean};
-    nodeClassNames?: {[type: string]: boolean};
+    nodeGenres: NodeGenres;
+    nodeClassNames?: NodeClassNames;
     nodeSize?: number; // default "64"
     horizontal?: boolean; // default "false"
     hideNodeTypes?: boolean; // default "false"
@@ -27,15 +38,26 @@ interface Props {
 
 const defaultNodeSize = 64;
 export const GraphPanel = (props: Props) => {
-    const [nodeSize, setNodeSize] = React.useState(props.nodeSize || defaultNodeSize);
-    const [horizontal, setHorizontal] = React.useState(props.horizontal);
-    const [fast, setFast] = React.useState(false);
-    const [types, setTypes] = React.useState(props.nodeGenres);
-    const [classNames, setClassNames] = React.useState(props.nodeClassNames);
+    const storage = new ScopedLocalStorage('graph/' + props.storageScope);
+    const propsNodeSize = props.nodeSize || defaultNodeSize;
+    const [nodeSize, setNodeSize] = React.useState<number>(storage.getItem('nodeSize', propsNodeSize));
+    const [horizontal, setHorizontal] = React.useState<boolean>(storage.getItem('horizontal', props.horizontal));
+    const [fast, setFast] = React.useState<boolean>(storage.getItem('fast', false));
+    const [nodeGenres, setNodeGenres] = React.useState<NodeGenres>(storage.getItem('nodeGenres', props.nodeGenres));
+    const [nodeClassNames, setNodeClassNames] = React.useState<NodeClassNames>(storage.getItem('nodeClassNames', props.nodeClassNames));
+
+    useEffect(() => storage.setItem('nodeSize', nodeSize, propsNodeSize), [nodeSize]);
+    useEffect(() => storage.setItem('horizontal', horizontal, props.horizontal), [horizontal]);
+    useEffect(() => storage.setItem('fast', fast, false), [fast]);
+    useEffect(() => storage.setItem('nodeGenres', nodeGenres, props.nodeGenres), [nodeGenres]);
+    useEffect(() => storage.setItem('nodeClassNames', nodeClassNames, props.nodeClassNames), [nodeClassNames]);
 
     const visible = (id: Node) => {
         const label = props.graph.nodes.get(id);
-        return types[label.genre] && (!classNames || Object.entries(classNames).find(([className, checked]) => checked && (label.classNames || '').split(' ').includes(className)));
+        return (
+            nodeGenres[label.genre] &&
+            (!nodeClassNames || Object.entries(nodeClassNames).find(([className, checked]) => checked && (label.classNames || '').split(' ').includes(className)))
+        );
     };
 
     layout(props.graph, nodeSize, horizontal, id => !visible(id), fast);
@@ -47,20 +69,20 @@ export const GraphPanel = (props: Props) => {
             <div className='graph-options-panel'>
                 <FilterDropDown
                     key='types'
-                    values={types}
+                    values={nodeGenres}
                     onChange={(label, checked) => {
-                        setTypes(v => {
+                        setNodeGenres(v => {
                             v[label] = checked;
                             return Object.assign({}, v);
                         });
                     }}
                 />
-                {classNames && (
+                {nodeClassNames && (
                     <FilterDropDown
                         key='class-names'
-                        values={classNames}
+                        values={nodeClassNames}
                         onChange={(label, checked) => {
-                            setClassNames(v => {
+                            setNodeClassNames(v => {
                                 v[label] = checked;
                                 return Object.assign({}, v);
                             });
