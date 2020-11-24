@@ -5,6 +5,7 @@ import {WorkflowTemplate} from '../../../models';
 import {MetadataEditor} from '../../shared/components/editors/metadata-editor';
 import {WorkflowSpecEditor} from '../../shared/components/editors/workflow-spec-editor';
 import {ObjectEditor} from '../../shared/components/object-editor/object-editor';
+import {LabelsAndAnnotationsEditor} from "../../shared/components/editors/labels-and-annotations-editor";
 
 export const WorkflowTemplateEditor = (props: {
     template: WorkflowTemplate;
@@ -29,6 +30,16 @@ export const WorkflowTemplateEditor = (props: {
                     key: 'metadata',
                     title: 'MetaData',
                     content: <MetadataEditor value={props.template.metadata} onChange={metadata => props.onChange({...props.template, metadata})} />
+                },
+                {
+                    key: 'workflow-metadata',
+                    title: 'Workflow MetaData',
+                    content: (
+                        <LabelsAndAnnotationsEditor
+                            value={props.template.spec.workflowMetadata}
+                            onChange={workflowMetadata => props.onChange({...props.template, spec: {...props.template.spec, workflowMetadata}})}
+                        />
+                    )
                 },
                 {
                     key: 'manifest',
