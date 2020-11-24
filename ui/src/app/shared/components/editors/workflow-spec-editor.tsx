@@ -109,13 +109,13 @@ export const WorkflowSpecEditor = (props: {value: WorkflowSpec; onChange: (value
             case 'Step':
                 {
                     const {templateName, i, j} = stepOf(id);
-                    delete props.value.templates.find(t => t.name === templateName).steps[i][j];
+                    props.value.templates.find(t => t.name === templateName).steps[i].splice(j, 1);
                 }
                 break;
             case 'StepGroup':
                 {
                     const {templateName, i} = stepGroupOf(id);
-                    delete props.value.templates.find(t => t.name === templateName).steps[i];
+                    props.value.templates.find(t => t.name === templateName).steps.splice(i, 1);
                 }
                 break;
             case 'Task':
@@ -123,14 +123,14 @@ export const WorkflowSpecEditor = (props: {value: WorkflowSpec; onChange: (value
                     const {templateName, taskName} = taskOf(id);
                     const tasks = props.value.templates.find(t => t.name === templateName).dag.tasks;
                     const i = tasks.findIndex(t => t.name === taskName);
-                    delete tasks[i];
+                    tasks.splice(i, 1);
                 }
                 break;
             case 'Template':
                 {
                     const {templateName} = templateOf(id);
                     const i = props.value.templates.findIndex(t => t.name === templateName);
-                    delete props.value.templates[i];
+                    props.value.templates.splice(i, 1);
                 }
                 break;
             case 'WorkflowTemplateRef':

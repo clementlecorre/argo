@@ -1,26 +1,26 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {Workflow} from '../../../models';
+import {ClusterWorkflowTemplate} from '../../../models';
 import {Button} from '../../shared/components/button';
 import {ErrorNotice} from '../../shared/components/error-notice';
 import {ExampleManifests} from '../../shared/components/example-manifests';
 import {UploadButton} from '../../shared/components/upload-button';
-import {exampleWorkflow} from '../../shared/examples';
+import {exampleClusterWorkflowTemplate} from '../../shared/examples';
 import {services} from '../../shared/services';
-import {WorkflowEditor} from './workflow-editor';
+import {ClusterWorkflowTemplateEditor} from './cluster-workflow-template-editor';
 
-export const WorkflowCreator = (props: {namespace: string; onCreate: (workflow: Workflow) => void}) => {
-    const [workflow, setWorkflow] = useState<Workflow>(exampleWorkflow(props.namespace || 'default'));
+export const ClusterWorkflowTemplateCreator = (props: {onCreate: (workflow: ClusterWorkflowTemplate) => void}) => {
+    const [template, setTemplate] = useState<ClusterWorkflowTemplate>(exampleClusterWorkflowTemplate());
     const [error, setError] = useState<Error>();
     return (
         <>
             <div>
-                <UploadButton onUpload={setWorkflow} onError={setError} />
+                <UploadButton onUpload={setTemplate} onError={setError} />
                 <Button
                     icon='plus'
                     onClick={() => {
-                        services.workflowTemplate
-                            .create(workflow, workflow.metadata.namespace)
+                        services.clusterWorkflowTemplate
+                            .create(template)
                             .then(props.onCreate)
                             .catch(setError);
                     }}>
@@ -28,7 +28,7 @@ export const WorkflowCreator = (props: {namespace: string; onCreate: (workflow: 
                 </Button>
             </div>
             <ErrorNotice error={error} />
-            <WorkflowEditor template={workflow} onChange={setWorkflow} onError={setError} />
+            <ClusterWorkflowTemplateEditor template={template} onChange={setTemplate} onError={setError} />
             <div>
                 <ExampleManifests />.
             </div>

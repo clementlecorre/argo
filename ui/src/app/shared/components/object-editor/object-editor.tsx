@@ -75,7 +75,7 @@ export const ObjectEditor = <T extends any>(props: Props<T>) => {
                     }}
                 />
             </div>
-            <div style={{paddingBottom: '1em'}}>
+            <div style={{paddingTop: '1em'}}>
                 {props.onChange && (
                     <>
                         <i className='fa fa-info-circle' />

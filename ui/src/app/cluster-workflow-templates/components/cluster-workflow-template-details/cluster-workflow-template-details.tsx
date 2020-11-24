@@ -1,127 +1,121 @@
 import {NotificationType, Page} from 'argo-ui';
 import {SlidingPanel} from 'argo-ui/src/index';
 import * as React from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {RouteComponentProps} from 'react-router';
-import * as models from '../../../../models';
+import {ClusterWorkflowTemplate} from '../../../../models';
 import {uiUrl} from '../../../shared/base';
-import {BasePage} from '../../../shared/components/base-page';
 import {ErrorNotice} from '../../../shared/components/error-notice';
 import {Loading} from '../../../shared/components/loading';
-import {Consumer} from '../../../shared/context';
+import {Context} from '../../../shared/context';
+import {historyUrl} from '../../../shared/history';
 import {services} from '../../../shared/services';
 import {Utils} from '../../../shared/utils';
 import {SubmitWorkflowPanel} from '../../../workflows/components/submit-workflow-panel';
-import {ClusterWorkflowTemplateSummaryPanel} from '../cluster-workflow-template-summary-panel';
+import {ClusterWorkflowTemplateEditor} from '../cluster-workflow-template-editor';
 
 require('../../../workflows/components/workflow-details/workflow-details.scss');
 
-interface State {
-    namespace?: string;
-    template?: models.ClusterWorkflowTemplate;
-    error?: Error;
-}
+export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) => {
+    // boiler-plate
+    const {navigation, notifications} = useContext(Context);
+    const {match, location, history} = props;
+    const queryParams = new URLSearchParams(location.search);
 
-export class ClusterWorkflowTemplateDetails extends BasePage<RouteComponentProps<any>, State> {
-    private get name() {
-        return this.props.match.params.name;
-    }
+    const name = match.params.name;
+    const [namespace, setNamespace] = useState<string>();
+    const [error, setError] = useState<Error>();
+    const [sidePanel, setSidePanel] = useState(queryParams.get('sidePanel'));
 
-    private get sidePanel() {
-        return this.queryParam('sidePanel');
-    }
+    const [template, setTemplate] = useState<ClusterWorkflowTemplate>();
 
-    private set sidePanel(sidePanel) {
-        this.setQueryParams({sidePanel});
-    }
+    useEffect(() => {
+        history.push(historyUrl('cluster-workflow-templates/{name}', {name, sidePanel}));
+    }, [sidePanel]);
 
-    constructor(props: RouteComponentProps<any>, context: any) {
-        super(props, context);
-        this.state = {};
-    }
-
-    public componentDidMount(): void {
+    useEffect(() => {
         services.clusterWorkflowTemplate
-            .get(this.name)
-            .then(template => this.setState({error: null, template}))
-            .then(() => services.info.getInfo())
-            .then(info => this.setState({namespace: info.managedNamespace || Utils.getCurrentNamespace() || 'default'}))
-            .catch(error => this.setState({error}));
-    }
+            .get(name)
+            .then(setTemplate)
+            .catch(setError);
+    }, []);
 
-    public render() {
-        return (
-            <Consumer>
-                {ctx => (
-                    <Page
-                        title='Cluster Workflow Template Details'
-                        toolbar={{
-                            actionMenu: {
-                                items: [
-                                    {
-                                        title: 'Submit',
-                                        iconClassName: 'fa fa-plus',
-                                        action: () => (this.sidePanel = 'new')
-                                    },
-                                    {
-                                        title: 'Delete',
-                                        iconClassName: 'fa fa-trash',
-                                        action: () => this.deleteClusterWorkflowTemplate()
-                                    }
-                                ]
-                            },
-                            breadcrumbs: [
-                                {
-                                    title: 'Cluster Workflow Template',
-                                    path: uiUrl('cluster-workflow-templates')
-                                },
-                                {title: this.name}
-                            ]
-                        }}>
-                        <div className='argo-container'>
-                            <div className='workflow-details__content'>{this.renderClusterWorkflowTemplate()}</div>
-                        </div>
-                        {this.state.template && (
-                            <SlidingPanel isShown={this.sidePanel !== null} onClose={() => (this.sidePanel = null)}>
-                                <SubmitWorkflowPanel
-                                    kind='ClusterWorkflowTemplate'
-                                    namespace={this.state.namespace}
-                                    name={this.state.template.metadata.name}
-                                    entrypoint={this.state.template.spec.entrypoint}
-                                    entrypoints={(this.state.template.spec.templates || []).map(t => t.name)}
-                                    parameters={this.state.template.spec.arguments.parameters || []}
-                                />
-                            </SlidingPanel>
-                        )}
-                    </Page>
-                )}
-            </Consumer>
-        );
-    }
+    useEffect(() => {
+        services.info
+            .getInfo()
+            .then(info => setNamespace(info.managedNamespace || Utils.getCurrentNamespace() || 'default'))
+            .catch(setError);
+    }, []);
 
-    private renderClusterWorkflowTemplate() {
-        if (this.state.error) {
-            return <ErrorNotice error={this.state.error} />;
-        }
-        if (!this.state.template) {
-            return <Loading />;
-        }
-        return <ClusterWorkflowTemplateSummaryPanel template={this.state.template} onChange={template => this.setState({template})} />;
-    }
-
-    private deleteClusterWorkflowTemplate() {
+    const deleteClusterWorkflowTemplate = () => {
         if (!confirm('Are you sure you want to delete this cluster workflow template?\nThere is no undo.')) {
             return;
         }
         services.clusterWorkflowTemplate
-            .delete(this.name)
-            .catch(e => {
-                this.appContext.apis.notifications.show({
-                    content: 'Failed to delete cluster workflow template ' + e,
-                    type: NotificationType.Error
-                });
-            })
-            .then(() => {
-                document.location.href = uiUrl('cluster-workflow-templates');
-            });
-    }
-}
+            .delete(name)
+            .then(() => navigation.goto(uiUrl('cluster-workflow-templates')))
+            .catch(setError);
+    };
+
+    return (
+        <Page
+            title='Cluster Workflow Template Details'
+            toolbar={{
+                actionMenu: {
+                    items: [
+                        {
+                            title: 'Submit',
+                            iconClassName: 'fa fa-plus',
+                            action: () => setSidePanel('new')
+                        },
+                        {
+                            title: 'Update',
+                            iconClassName: 'fa fa-save',
+                            action: () => {
+                                services.clusterWorkflowTemplate
+                                    .update(template, name)
+                                    .then(setTemplate)
+                                    .then(() => setError(null))
+                                    .then(() => {
+                                        notifications.show({
+                                            content: 'Updated',
+                                            type: NotificationType.Success
+                                        });
+                                    })
+                                    .catch(setError);
+                            }
+                        },
+                        {
+                            title: 'Delete',
+                            iconClassName: 'fa fa-trash',
+                            action: () => deleteClusterWorkflowTemplate()
+                        }
+                    ]
+                },
+                breadcrumbs: [
+                    {
+                        title: 'Cluster Workflow Template',
+                        path: uiUrl('cluster-workflow-templates')
+                    },
+                    {title: name}
+                ]
+            }}>
+            <>
+                <ErrorNotice error={error} />
+                {!template ? <Loading /> : <ClusterWorkflowTemplateEditor template={template} onChange={setTemplate} onError={setError} />}
+            </>
+            {template && (
+                <SlidingPanel isShown={sidePanel !== null} onClose={() => setSidePanel(null)}>
+                    <SubmitWorkflowPanel
+                        kind='ClusterWorkflowTemplate'
+                        namespace={namespace}
+                        name={template.metadata.name}
+                        entrypoint={template.spec.entrypoint}
+                        entrypoints={(template.spec.templates || []).map(t => t.name)}
+                        parameters={template.spec.arguments.parameters || []}
+                    />
+                </SlidingPanel>
+            )}
+        </Page>
+    );
+};
