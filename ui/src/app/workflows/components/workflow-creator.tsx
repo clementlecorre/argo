@@ -1,26 +1,26 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {WorkflowTemplate} from '../../../models';
+import {Workflow} from '../../../models';
 import {Button} from '../../shared/components/button';
 import {ErrorNotice} from '../../shared/components/error-notice';
 import {ExampleManifests} from '../../shared/components/example-manifests';
 import {UploadButton} from '../../shared/components/upload-button';
-import {exampleWorkflowTemplate} from '../../shared/examples';
+import {exampleWorkflow} from '../../shared/examples';
 import {services} from '../../shared/services';
-import {WorkflowTemplateEditor} from './workflow-template-editor';
+import {WorkflowEditor} from './workflow-editor';
 
-export const WorkflowTemplateCreator = (props: {namespace: string; onCreate: (workflow: WorkflowTemplate) => void}) => {
-    const [template, setTemplate] = useState<WorkflowTemplate>(exampleWorkflowTemplate(props.namespace || 'default'));
+export const WorkflowCreator = (props: {namespace: string; onCreate: (workflow: Workflow) => void}) => {
+    const [workflow, setWorkflow] = useState<Workflow>(exampleWorkflow(props.namespace || 'default'));
     const [error, setError] = useState<Error>();
     return (
         <>
             <div>
-                <UploadButton onUpload={setTemplate} onError={setError} />
+                <UploadButton onUpload={setWorkflow} onError={setError} />
                 <Button
                     icon='plus'
                     onClick={() => {
                         services.workflowTemplate
-                            .create(template, template.metadata.namespace)
+                            .create(workflow, workflow.metadata.namespace)
                             .then(props.onCreate)
                             .catch(setError);
                     }}>
@@ -28,7 +28,7 @@ export const WorkflowTemplateCreator = (props: {namespace: string; onCreate: (wo
                 </Button>
             </div>
             <ErrorNotice error={error} />
-            <WorkflowTemplateEditor template={template} onChange={setTemplate} onError={setError} />
+            <WorkflowEditor template={workflow} onChange={setWorkflow} onError={setError} />
             <p>
                 <ExampleManifests />.
             </p>

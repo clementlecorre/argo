@@ -13,15 +13,14 @@ import {ExampleManifests} from '../../../shared/components/example-manifests';
 import {Loading} from '../../../shared/components/loading';
 import {PaginationPanel} from '../../../shared/components/pagination-panel';
 import {Query} from '../../../shared/components/query';
-import {ResourceEditor} from '../../../shared/components/resource-editor/resource-editor';
 import {ZeroState} from '../../../shared/components/zero-state';
 import {Consumer} from '../../../shared/context';
-import {exampleWorkflow} from '../../../shared/examples';
 import {ListWatch, sortByYouth} from '../../../shared/list-watch';
 import {Pagination, parseLimit} from '../../../shared/pagination';
 import {services} from '../../../shared/services';
 import {Utils} from '../../../shared/utils';
 import * as Actions from '../../../shared/workflow-operations-map';
+import {WorkflowCreator} from '../workflow-creator';
 import {WorkflowFilters} from '../workflow-filters/workflow-filters';
 import {WorkflowsRow} from '../workflows-row/workflows-row';
 import {WorkflowsToolbar} from '../workflows-toolbar/workflows-toolbar';
@@ -180,22 +179,10 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                             <div className='columns small-12 xlarge-10'>{this.renderWorkflows()}</div>
                         </div>
                         <SlidingPanel isShown={!!this.wfInput} onClose={() => ctx.navigation.goto('.', {new: null})}>
-                            <ResourceEditor
-                                title='Submit Workflow'
-                                kind='Workflow'
-                                upload={true}
-                                editing={true}
+                            <WorkflowCreator
                                 namespace={this.state.namespace || 'default'}
-                                value={exampleWorkflow()}
-                                onSubmit={wfValue =>
-                                    services.workflows
-                                        .create(wfValue, wfValue.metadata.namespace || this.state.namespace)
-                                        .then(wf => ctx.navigation.goto(uiUrl(`workflows/${wf.metadata.namespace}/${wf.metadata.name}`)))
-                                }
+                                onCreate={wf => ctx.navigation.goto(uiUrl(`workflows/${wf.metadata.namespace}/${wf.metadata.name}`))}
                             />
-                            <p>
-                                <ExampleManifests />.
-                            </p>
                         </SlidingPanel>
                     </Page>
                 )}

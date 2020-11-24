@@ -29,10 +29,11 @@ export const exampleTemplate = (name: string): Template => ({
 
 const templates: Template[] = [exampleTemplate(entrypoint)];
 
-export const exampleWorkflow = (): Workflow => {
+export const exampleWorkflow = (namespace: string): Workflow => {
     return {
         metadata: {
             name: randomSillyName(),
+            namespace,
             labels
         },
         spec: {

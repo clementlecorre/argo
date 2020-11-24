@@ -54,7 +54,7 @@ export const ObjectEditor = <T extends any>(props: Props<T>) => {
 
     return (
         <>
-            <div>
+            <div style={{paddingBottom: '1em'}}>
                 <ToggleButton toggled={lang === 'yaml'} onToggle={() => setLang(lang === 'yaml' ? 'json' : 'yaml')}>
                     YAML
                 </ToggleButton>
@@ -75,7 +75,7 @@ export const ObjectEditor = <T extends any>(props: Props<T>) => {
                     }}
                 />
             </div>
-            <p>
+            <div style={{paddingBottom: '1em'}}>
                 {props.onChange && (
                     <>
                         <i className='fa fa-info-circle' />
@@ -83,7 +83,7 @@ export const ObjectEditor = <T extends any>(props: Props<T>) => {
                     </>
                 )}{' '}
                 <a href='https://argoproj.github.io/argo/ide-setup/'>Learn how to get auto-completion in your IDE.</a>
-            </p>
+            </div>
         </>
     );
 };

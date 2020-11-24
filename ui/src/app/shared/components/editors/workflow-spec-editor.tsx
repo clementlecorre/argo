@@ -234,20 +234,27 @@ export const WorkflowSpecEditor = (props: {value: WorkflowSpec; onChange: (value
                 {selectedId && object(selectedId) ? (
                     <>
                         <h4>{selectedId}</h4>
-                        <div style={{marginBottom: '1em'}}>
-                            <Button
-                                icon='times'
-                                onClick={() => {
-                                    deleteObject(selectedId);
-                                    setSelectedId(undefined);
-                                }}>
-                                Remove
-                            </Button>
-                            <Button icon='check' onClick={() => setSelectedId(undefined)}>
-                                OK
-                            </Button>
-                        </div>
-                        <ObjectEditor type={type(selectedId)} value={object(selectedId)} onChange={value => setObject(selectedId, value)} onError={props.onError} />
+                        <ObjectEditor
+                            type={type(selectedId)}
+                            value={object(selectedId)}
+                            onChange={value => setObject(selectedId, value)}
+                            onError={props.onError}
+                            buttons={
+                                <>
+                                    <Button
+                                        icon='times'
+                                        onClick={() => {
+                                            deleteObject(selectedId);
+                                            setSelectedId(undefined);
+                                        }}>
+                                        Remove
+                                    </Button>
+                                    <Button icon='check' onClick={() => setSelectedId(undefined)}>
+                                        OK
+                                    </Button>
+                                </>
+                            }
+                        />
                     </>
                 ) : (
                     <>
