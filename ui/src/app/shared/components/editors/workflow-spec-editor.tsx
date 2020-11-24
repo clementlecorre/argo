@@ -22,7 +22,7 @@ const type = (id: string) => {
     return types[typeOf(id)];
 };
 
-export const WorkflowSpecEditor = (props: {value: WorkflowSpec; onChange: (value: WorkflowSpec) => void; onError: (error: Error) => void}) => {
+export const WorkflowSpecEditor = <T extends WorkflowSpec>(props: {value: T; onChange: (value: T) => void; onError: (error: Error) => void}) => {
     const [selectedId, setSelectedId] = React.useState<string>();
 
     const object = (id: string) => {

@@ -1,4 +1,4 @@
-import {Page} from 'argo-ui';
+import {NotificationType, Page} from 'argo-ui';
 import * as React from 'react';
 import {useContext, useEffect, useState} from 'react';
 import {RouteComponentProps} from 'react-router';
@@ -9,29 +9,42 @@ import {Loading} from '../../../shared/components/loading';
 import {Context} from '../../../shared/context';
 import {historyUrl} from '../../../shared/history';
 import {services} from '../../../shared/services';
-import {CronWorkflowSummaryPanel} from '../cron-workflow-summary-panel';
+import {CronWorkflowEditor} from '../cron-workflow-editor';
 
 require('../../../workflows/components/workflow-details/workflow-details.scss');
 
 export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
     // boiler-plate
-    const {navigation} = useContext(Context);
+    const {navigation, notifications} = useContext(Context);
     const {match, history} = props;
     const [namespace] = useState(match.params.namespace);
     const [name] = useState(match.params.name);
 
     const [cronWorkflow, setCronWorkflow] = useState<CronWorkflow>();
+    const [edited, setEdited] = useState(false);
     const [error, setError] = useState<Error>();
 
-    useEffect(() => history.push(historyUrl('cron-workflows/{namespace}/{name}', {namespace, name})), [namespace, name]);
+    useEffect(
+        () =>
+            history.push(
+                historyUrl('cron-workflows/{namespace}/{name}', {
+                    namespace,
+                    name
+                })
+            ),
+        [namespace, name]
+    );
 
     useEffect(() => {
         services.cronWorkflows
             .get(name, namespace)
             .then(setCronWorkflow)
+            .then(() => setEdited(false))
             .then(() => setError(null))
             .catch(setError);
     }, [namespace, name]);
+
+    useEffect(() => setEdited(true), [cronWorkflow]);
 
     const suspendButton =
         cronWorkflow && !cronWorkflow.spec.suspend
@@ -43,7 +56,7 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                           .suspend(name, namespace)
                           .then(setCronWorkflow)
                           .catch(setError),
-                  disabled: !cronWorkflow
+                  disabled: !cronWorkflow || edited
               }
             : {
                   title: 'Resume',
@@ -53,17 +66,23 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                           .resume(name, namespace)
                           .then(setCronWorkflow)
                           .catch(setError),
-                  disabled: !cronWorkflow || !cronWorkflow.spec.suspend
+                  disabled: !cronWorkflow || !cronWorkflow.spec.suspend || edited
               };
     return (
         <Page
             title='Cron Workflow Details'
             toolbar={{
+                breadcrumbs: [
+                    {title: 'Cron Workflows', path: uiUrl('cron-workflows')},
+                    {title: namespace, path: uiUrl('cron-workflows/' + namespace)},
+                    {title: name, path: uiUrl('cron-workflows/' + namespace + '/' + name)}
+                ],
                 actionMenu: {
                     items: [
                         {
                             title: 'Submit',
                             iconClassName: 'fa fa-plus',
+                            disabled: edited,
                             action: () =>
                                 services.workflows
                                     .submit('cronwf', name, namespace)
@@ -71,8 +90,33 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                                     .catch(setError)
                         },
                         {
+                            title: 'Update',
+                            iconClassName: 'fa fa-save',
+                            disabled: !edited,
+                            action: () => {
+                                // magic - we get the latest from the server and then apply the changes from the rendered version to this
+                                return services.cronWorkflows
+                                    .get(name, namespace)
+                                    .then(latest =>
+                                        services.cronWorkflows.update(
+                                            {
+                                                ...latest,
+                                                spec: cronWorkflow.spec,
+                                                metadata: {...cronWorkflow.metadata, resourceVersion: latest.metadata.resourceVersion}
+                                            },
+                                            cronWorkflow.metadata.name,
+                                            cronWorkflow.metadata.namespace
+                                        )
+                                    )
+                                    .then(setCronWorkflow)
+                                    .then(() => notifications.show({content: 'Updated', type: NotificationType.Success}))
+                                    .catch(setError);
+                            }
+                        },
+                        {
                             title: 'Delete',
                             iconClassName: 'fa fa-trash',
+                            disabled: edited,
                             action: () => {
                                 if (!confirm('Are you sure you want to delete this cron workflow?\nThere is no undo.')) {
                                     return;
@@ -86,20 +130,11 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                         suspendButton
                     ]
                 },
-                breadcrumbs: [
-                    {
-                        title: 'Cron Workflows',
-                        path: uiUrl('cron-workflows')
-                    },
-                    {title: namespace + '/' + name}
-                ]
             }}>
-            <div className='argo-container'>
-                <div className='workflow-details__content'>
-                    <ErrorNotice error={error} />
-                    {!cronWorkflow ? <Loading /> : <CronWorkflowSummaryPanel cronWorkflow={cronWorkflow} onChange={setCronWorkflow} />}
-                </div>
-            </div>
+            <>
+                <ErrorNotice error={error} />
+                {!cronWorkflow ? <Loading /> : <CronWorkflowEditor cronWorkflow={cronWorkflow} onChange={setCronWorkflow} onError={setError} />}
+            </>
         </Page>
     );
 };

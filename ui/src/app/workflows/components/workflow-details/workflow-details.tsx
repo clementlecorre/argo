@@ -15,7 +15,11 @@ import {Consumer, ContextApis} from '../../../shared/context';
 import {RetryWatch} from '../../../shared/retry-watch';
 import {services} from '../../../shared/services';
 import * as Operations from '../../../shared/workflow-operations-map';
-import {WorkflowOperationAction, WorkflowOperationName, WorkflowOperations} from '../../../shared/workflow-operations-map';
+import {
+    WorkflowOperationAction,
+    WorkflowOperationName,
+    WorkflowOperations
+} from '../../../shared/workflow-operations-map';
 import {EventsPanel} from '../events-panel';
 import {WorkflowArtifacts} from '../workflow-artifacts';
 import {WorkflowLogsViewer} from '../workflow-logs-viewer/workflow-logs-viewer';
@@ -105,11 +109,9 @@ export class WorkflowDetails extends React.Component<RouteComponentProps<any>, W
                         title={'Workflow Details'}
                         toolbar={{
                             breadcrumbs: [
-                                {
-                                    title: 'Workflows',
-                                    path: uiUrl('workflows')
-                                },
-                                {title: this.namespace + '/' + this.name}
+                                {title: 'Workflows', path: uiUrl('workflows')},
+                                {title: this.namespace, path: uiUrl('workflows/' + this.namespace)},
+                                {title: this.name, path: uiUrl('workflows/' + this.namespace + '/' + this.name)}
                             ],
                             actionMenu: {
                                 items: this.getItems(ctx)

@@ -5,7 +5,7 @@ import {WorkflowTemplate} from '../../../models';
 import {MetadataEditor} from '../../shared/components/editors/metadata-editor';
 import {WorkflowSpecEditor} from '../../shared/components/editors/workflow-spec-editor';
 import {ObjectEditor} from '../../shared/components/object-editor/object-editor';
-import {LabelsAndAnnotationsEditor} from "../../shared/components/editors/labels-and-annotations-editor";
+import {LabelsAndAnnotationsEditor} from '../../shared/components/editors/labels-and-annotations-editor';
 
 export const WorkflowTemplateEditor = (props: {
     template: WorkflowTemplate;

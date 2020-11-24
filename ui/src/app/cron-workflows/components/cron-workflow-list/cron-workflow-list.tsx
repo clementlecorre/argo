@@ -57,7 +57,10 @@ export class CronWorkflowList extends BasePage<RouteComponentProps<any>, State> 
                     <Page
                         title='Cron Workflows'
                         toolbar={{
-                            breadcrumbs: [{title: 'Cron Workflows', path: uiUrl('cron-workflows')}],
+                            breadcrumbs: [
+                                {title: 'Cron Workflows', path: uiUrl('cron-workflows')},
+                                {title: this.namespace, path: uiUrl('cron-workflows/' + this.namespace)}
+                            ],
                             actionMenu: {
                                 items: [
                                     {

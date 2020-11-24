@@ -54,6 +54,10 @@ export const WorkflowTemplateList = (props: RouteComponentProps<any>) => {
         <Page
             title='Workflow Templates'
             toolbar={{
+                breadcrumbs: [
+                    {title: 'Workflow Templates', path: uiUrl('workflow-templates')},
+                    {title: namespace, path: uiUrl('workflow-templates/' + namespace)}
+                ],
                 actionMenu: {
                     items: [
                         {

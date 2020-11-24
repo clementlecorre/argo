@@ -56,6 +56,11 @@ export const WorkflowTemplateDetails = (props: RouteComponentProps<any>) => {
         <Page
             title='Workflow Template Details'
             toolbar={{
+                breadcrumbs: [
+                    {title: 'Workflow Templates', path: uiUrl('workflow-templates')},
+                    {title: namespace, path: uiUrl('workflow-templates/' + namespace)},
+                    {title: name, path: uiUrl('workflow-templates/' + namespace + '/' + name)}
+                ],
                 actionMenu: {
                     items: [
                         {
@@ -88,7 +93,7 @@ export const WorkflowTemplateDetails = (props: RouteComponentProps<any>) => {
                                 services.workflowTemplate
                                     .delete(name, namespace)
                                     .then(() => navigation.goto(uiUrl('workflow-templates')))
-                                    .catch(setError)
+                                    .catch(setError);
                             }
                         }
                     ]

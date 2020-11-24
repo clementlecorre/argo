@@ -139,7 +139,10 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                     <Page
                         title='Workflows'
                         toolbar={{
-                            breadcrumbs: [{title: 'Workflows', path: uiUrl('workflows')}],
+                            breadcrumbs: [
+                                {title: 'Workflows', path: uiUrl('workflows')},
+                                {title: this.state.namespace, path: uiUrl('workflows/' + this.state.namespace)}
+                            ],
                             actionMenu: {
                                 items: [
                                     {
@@ -148,8 +151,7 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                                         action: () => ctx.navigation.goto('.', {new: '{}'})
                                     }
                                 ]
-                            },
-                            tools: []
+                            }
                         }}>
                         <WorkflowsToolbar
                             selectedWorkflows={this.state.selectedWorkflows}

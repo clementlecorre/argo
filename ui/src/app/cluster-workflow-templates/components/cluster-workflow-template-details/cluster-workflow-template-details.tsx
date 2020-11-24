@@ -25,6 +25,7 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
     const name = match.params.name;
     const [namespace, setNamespace] = useState<string>();
     const [sidePanel, setSidePanel] = useState(queryParams.get('sidePanel') === 'true');
+    const [tab, setTab] = useState<string>(queryParams.get('tab'));
 
     const [error, setError] = useState<Error>();
     const [template, setTemplate] = useState<ClusterWorkflowTemplate>();
@@ -32,8 +33,8 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
 
     useEffect(() => setEdited(true), [template]);
     useEffect(() => {
-        history.push(historyUrl('cluster-workflow-templates/{name}', {name, sidePanel}));
-    }, [sidePanel]);
+        history.push(historyUrl('cluster-workflow-templates/{name}', {name, sidePanel, tab}));
+    }, [sidePanel, tab]);
 
     useEffect(() => {
         services.clusterWorkflowTemplate
@@ -54,6 +55,10 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
         <Page
             title='Cluster Workflow Template Details'
             toolbar={{
+                breadcrumbs: [
+                    {title: 'Cluster Workflow Templates', path: uiUrl('cluster-workflow-templates')},
+                    {title: name, path: uiUrl('cluster-workflow-templates/' + name)}
+                ],
                 actionMenu: {
                     items: [
                         {
@@ -98,8 +103,13 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
                 }
             }}>
             <>
-                <ErrorNotice error={error} />
-                {!template ? <Loading /> : <ClusterWorkflowTemplateEditor template={template} onChange={setTemplate} onError={setError} />}
+                <ErrorNotice error={error}/>
+                {!template ? (
+                    <Loading/>
+                ) : (
+                    <ClusterWorkflowTemplateEditor template={template} onChange={setTemplate} onError={setError}
+                                                   onTabSelected={setTab} selectedTabKey={tab}/>
+                )}
             </>
             {template && (
                 <SlidingPanel isShown={!!sidePanel} onClose={() => setSidePanel(null)} isNarrow={true}>
