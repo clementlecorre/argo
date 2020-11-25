@@ -103,12 +103,11 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
                 }
             }}>
             <>
-                <ErrorNotice error={error}/>
+                <ErrorNotice error={error} />
                 {!template ? (
-                    <Loading/>
+                    <Loading />
                 ) : (
-                    <ClusterWorkflowTemplateEditor template={template} onChange={setTemplate} onError={setError}
-                                                   onTabSelected={setTab} selectedTabKey={tab}/>
+                    <ClusterWorkflowTemplateEditor template={template} onChange={setTemplate} onError={setError} onTabSelected={setTab} selectedTabKey={tab} />
                 )}
             </>
             {template && (

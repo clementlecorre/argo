@@ -16,9 +16,12 @@ require('../../../workflows/components/workflow-details/workflow-details.scss');
 export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
     // boiler-plate
     const {navigation, notifications} = useContext(Context);
-    const {match, history} = props;
+    const {match, location, history} = props;
+    const queryParams = new URLSearchParams(location.search);
+
     const [namespace] = useState(match.params.namespace);
     const [name] = useState(match.params.name);
+    const [tab, setTab] = useState<string>(queryParams.get('tab'));
 
     const [cronWorkflow, setCronWorkflow] = useState<CronWorkflow>();
     const [edited, setEdited] = useState(false);
@@ -29,10 +32,11 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
             history.push(
                 historyUrl('cron-workflows/{namespace}/{name}', {
                     namespace,
-                    name
+                    name,
+                    tab
                 })
             ),
-        [namespace, name]
+        [namespace, name, tab]
     );
 
     useEffect(() => {
@@ -129,11 +133,15 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                         },
                         suspendButton
                     ]
-                },
+                }
             }}>
             <>
                 <ErrorNotice error={error} />
-                {!cronWorkflow ? <Loading /> : <CronWorkflowEditor cronWorkflow={cronWorkflow} onChange={setCronWorkflow} onError={setError} />}
+                {!cronWorkflow ? (
+                    <Loading />
+                ) : (
+                    <CronWorkflowEditor cronWorkflow={cronWorkflow} onChange={setCronWorkflow} onError={setError} selectedTabKey={tab} onTabSelected={setTab} />
+                )}
             </>
         </Page>
     );

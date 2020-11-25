@@ -1,5 +1,6 @@
 import {Page, SlidingPanel, Tabs} from 'argo-ui';
 import {useContext, useEffect, useState} from 'react';
+import React = require('react');
 import {RouteComponentProps} from 'react-router-dom';
 import {Observable} from 'rxjs';
 import {kubernetes, Workflow} from '../../../../models';
@@ -21,7 +22,6 @@ import {FullHeightLogsViewer} from '../../../workflows/components/workflow-logs-
 import {buildGraph} from './build-graph';
 import {genres} from './genres';
 import {ID} from './id';
-import React = require('react');
 
 require('./event-page.scss');
 

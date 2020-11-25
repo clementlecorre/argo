@@ -15,11 +15,7 @@ import {Consumer, ContextApis} from '../../../shared/context';
 import {RetryWatch} from '../../../shared/retry-watch';
 import {services} from '../../../shared/services';
 import * as Operations from '../../../shared/workflow-operations-map';
-import {
-    WorkflowOperationAction,
-    WorkflowOperationName,
-    WorkflowOperations
-} from '../../../shared/workflow-operations-map';
+import {WorkflowOperationAction, WorkflowOperationName, WorkflowOperations} from '../../../shared/workflow-operations-map';
 import {EventsPanel} from '../events-panel';
 import {WorkflowArtifacts} from '../workflow-artifacts';
 import {WorkflowLogsViewer} from '../workflow-logs-viewer/workflow-logs-viewer';

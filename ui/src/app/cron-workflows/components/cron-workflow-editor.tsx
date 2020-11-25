@@ -31,7 +31,7 @@ export const CronWorkflowEditor = (props: {
                 {
                     key: 'cron',
                     title: 'Cron',
-                    content: <CronWorkflowSpecEditor spec={props.cronWorkflow.spec} />
+                    content: <CronWorkflowSpecEditor spec={props.cronWorkflow.spec} onChange={spec => props.onChange({...props.cronWorkflow, spec})} />
                 },
                 {
                     key: 'metadata',
