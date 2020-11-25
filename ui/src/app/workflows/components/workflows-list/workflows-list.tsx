@@ -182,7 +182,7 @@ export class WorkflowsList extends BasePage<RouteComponentProps<any>, State> {
                         </div>
                         <SlidingPanel isShown={!!this.wfInput} onClose={() => ctx.navigation.goto('.', {new: null})}>
                             <WorkflowCreator
-                                namespace={this.state.namespace || 'default'}
+                                namespace={Utils.getNamespace(this.state.namespace)}
                                 onCreate={wf => ctx.navigation.goto(uiUrl(`workflows/${wf.metadata.namespace}/${wf.metadata.name}`))}
                             />
                         </SlidingPanel>

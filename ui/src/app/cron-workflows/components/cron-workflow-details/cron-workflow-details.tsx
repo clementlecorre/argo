@@ -133,7 +133,7 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                                 }
                                 services.cronWorkflows
                                     .delete(name, namespace)
-                                    .then(() => navigation.goto(uiUrl('cron-workflows')))
+                                    .then(() => navigation.goto(uiUrl('cron-workflows/' + namespace)))
                                     .then(() => setError(null))
                                     .catch(setError);
                             }

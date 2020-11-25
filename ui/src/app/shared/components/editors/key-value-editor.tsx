@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {createRef} from 'react';
 import {TextInput} from '../text-input';
 
 interface KeyValues {
@@ -14,7 +13,6 @@ export const KeyValueEditor = (props: {value: KeyValues; onChange: (value: KeyVa
         delete keyValues[k];
         props.onChange(keyValues);
     };
-    const nameRef = createRef<any>();
     const addItem = () => {
         if (!name || !value) {
             return;
@@ -23,7 +21,6 @@ export const KeyValueEditor = (props: {value: KeyValues; onChange: (value: KeyVa
         props.onChange(keyValues);
         setName('');
         setValue('');
-        nameRef.current.focus();
     };
     return (
         <>
@@ -48,7 +45,7 @@ export const KeyValueEditor = (props: {value: KeyValues; onChange: (value: KeyVa
                     }
                 }}>
                 <div className='columns small-4'>
-                    <TextInput value={name} onChange={setName} placeholder='Name...' ref={nameRef} />
+                    <TextInput value={name} onChange={setName} placeholder='Name...' />
                 </div>
                 <div className='columns small-6'>
                     <TextInput value={value} onChange={setValue} placeholder='Value...' />

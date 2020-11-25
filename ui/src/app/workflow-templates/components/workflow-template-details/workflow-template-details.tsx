@@ -93,7 +93,7 @@ export const WorkflowTemplateDetails = (props: RouteComponentProps<any>) => {
                                 }
                                 services.workflowTemplate
                                     .delete(name, namespace)
-                                    .then(() => navigation.goto(uiUrl('workflow-templates')))
+                                    .then(() => navigation.goto(uiUrl('workflow-templates/' + namespace)))
                                     .then(() => setError(null))
                                     .catch(setError);
                             }

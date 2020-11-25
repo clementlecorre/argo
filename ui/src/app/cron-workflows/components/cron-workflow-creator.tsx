@@ -1,27 +1,27 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {WorkflowTemplate} from '../../../models';
+import {CronWorkflow} from '../../../models';
 import {Button} from '../../shared/components/button';
 import {ErrorNotice} from '../../shared/components/error-notice';
 import {ExampleManifests} from '../../shared/components/example-manifests';
 import {UploadButton} from '../../shared/components/upload-button';
-import {exampleWorkflowTemplate} from '../../shared/examples';
+import {exampleCronWorkflow} from '../../shared/examples';
 import {services} from '../../shared/services';
 import {Utils} from '../../shared/utils';
-import {WorkflowTemplateEditor} from './workflow-template-editor';
+import {CronWorkflowEditor} from './cron-workflow-editor';
 
-export const WorkflowTemplateCreator = (props: {namespace: string; onCreate: (workflow: WorkflowTemplate) => void}) => {
-    const [template, setTemplate] = useState<WorkflowTemplate>(exampleWorkflowTemplate(Utils.getNamespace(props.namespace)));
+export const CronWorkflowCreator = (props: {namespace: string; onCreate: (cronWorkflow: CronWorkflow) => void}) => {
+    const [cronWorkflow, setCronWorkflow] = useState<CronWorkflow>(exampleCronWorkflow(Utils.getNamespace(props.namespace)));
     const [error, setError] = useState<Error>();
     return (
         <>
             <div>
-                <UploadButton onUpload={setTemplate} onError={setError} />
+                <UploadButton onUpload={setCronWorkflow} onError={setError} />
                 <Button
                     icon='plus'
                     onClick={() => {
-                        services.workflowTemplate
-                            .create(template, template.metadata.namespace)
+                        services.cronWorkflows
+                            .create(cronWorkflow, cronWorkflow.metadata.namespace)
                             .then(props.onCreate)
                             .catch(setError);
                     }}>
@@ -29,7 +29,7 @@ export const WorkflowTemplateCreator = (props: {namespace: string; onCreate: (wo
                 </Button>
             </div>
             <ErrorNotice error={error} />
-            <WorkflowTemplateEditor template={template} onChange={setTemplate} onError={setError} />
+            <CronWorkflowEditor cronWorkflow={cronWorkflow} onChange={setCronWorkflow} onError={setError} />
             <p>
                 <ExampleManifests />.
             </p>

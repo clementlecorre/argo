@@ -48,7 +48,7 @@ export const ObjectEditor = <T extends any>(props: Props<T>) => {
                 })
                 .catch(error => props.onError(error));
         }
-    }, [lang]);
+    }, [lang, props.type]);
 
     const editor = createRef<MonacoEditor>();
 
@@ -60,7 +60,12 @@ export const ObjectEditor = <T extends any>(props: Props<T>) => {
                 </ToggleButton>
                 {props.buttons}
             </div>
-            <div onBlur={() => props.onChange && props.onChange(parse(editor.current.editor.getModel().getValue()))}>
+            <div
+                onBlur={() => {
+                    if (props.onChange) {
+                        props.onChange(parse(editor.current.editor.getModel().getValue()));
+                    }
+                }}>
                 <MonacoEditor
                     ref={editor}
                     key='editor'
@@ -78,7 +83,7 @@ export const ObjectEditor = <T extends any>(props: Props<T>) => {
             <div style={{paddingTop: '1em'}}>
                 {props.onChange && (
                     <>
-                        <i className='fa fa-info-circle' />
+                        <i className='fa fa-info-circle' />{' '}
                         {lang === 'json' ? <>Full auto-completion enabled.</> : <>Basic completion for YAML. Switch to JSON for full auto-completion.</>}
                     </>
                 )}{' '}

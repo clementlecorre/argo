@@ -34,7 +34,7 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
     useEffect(() => setEdited(true), [template]);
     useEffect(() => {
         history.push(historyUrl('cluster-workflow-templates/{name}', {name, sidePanel, tab}));
-    }, [sidePanel, tab]);
+    }, [name, sidePanel, tab]);
 
     useEffect(() => {
         services.clusterWorkflowTemplate
@@ -43,12 +43,12 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
             .then(() => setEdited(false)) // set back to false
             .then(() => setError(null))
             .catch(setError);
-    }, []);
+    }, [name]);
 
     useEffect(() => {
         services.info
             .getInfo()
-            .then(info => setNamespace(info.managedNamespace || Utils.getCurrentNamespace() || 'default'))
+            .then(info => setNamespace(Utils.getNamespace(info.managedNamespace)))
             .then(() => setError(null))
             .catch(setError);
     }, []);

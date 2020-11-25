@@ -51,7 +51,7 @@ export const AppRouter = (props: {popupManager: PopupManager; history: H.History
     useEffect(() => {
         const sub = props.popupManager.popupProps.subscribe(setPopupProps);
         return () => sub.unsubscribe();
-    }, []);
+    }, [props.popupManager]);
     useEffect(() => {
         services.info
             .getInfo()

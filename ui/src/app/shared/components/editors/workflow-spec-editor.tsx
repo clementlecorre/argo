@@ -12,8 +12,6 @@ require('./workflow-spec-editor.scss');
 
 const type = (id: string) => {
     const types: {[key: string]: string} = {
-        Artifacts: 'io.argoproj.workflow.v1alpha1.Artifacts',
-        Parameters: 'io.argoproj.workflow.v1alpha1.Parameters',
         Step: 'io.argoproj.workflow.v1alpha1.WorkflowStep',
         Template: 'io.argoproj.workflow.v1alpha1.Template',
         Task: 'io.argoproj.workflow.v1alpha1.DagTask',

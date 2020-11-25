@@ -7,10 +7,11 @@ import {ExampleManifests} from '../../shared/components/example-manifests';
 import {UploadButton} from '../../shared/components/upload-button';
 import {exampleWorkflow} from '../../shared/examples';
 import {services} from '../../shared/services';
+import {Utils} from '../../shared/utils';
 import {WorkflowEditor} from './workflow-editor';
 
 export const WorkflowCreator = (props: {namespace: string; onCreate: (workflow: Workflow) => void}) => {
-    const [workflow, setWorkflow] = useState<Workflow>(exampleWorkflow(props.namespace || 'default'));
+    const [workflow, setWorkflow] = useState<Workflow>(exampleWorkflow(Utils.getNamespace(props.namespace)));
     const [error, setError] = useState<Error>();
     return (
         <>
@@ -19,10 +20,9 @@ export const WorkflowCreator = (props: {namespace: string; onCreate: (workflow: 
                 <Button
                     icon='plus'
                     onClick={() => {
-                        services.workflowTemplate
+                        services.workflows
                             .create(workflow, workflow.metadata.namespace)
                             .then(props.onCreate)
-                            .then(() => setError(null))
                             .catch(setError);
                     }}>
                     Create

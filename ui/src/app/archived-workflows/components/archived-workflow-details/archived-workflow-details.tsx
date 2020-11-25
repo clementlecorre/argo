@@ -29,6 +29,10 @@ interface State {
 }
 
 export class ArchivedWorkflowDetails extends BasePage<RouteComponentProps<any>, State> {
+    private get namespace() {
+        return this.props.match.params.namespace;
+    }
+
     private get uid() {
         return this.props.match.params.uid;
     }
@@ -70,7 +74,14 @@ export class ArchivedWorkflowDetails extends BasePage<RouteComponentProps<any>, 
         services.info
             .getInfo()
             .then(info => this.setState({links: info.links}))
-            .then(() => services.archivedWorkflows.get(this.uid).then(workflow => this.setState({error: null, workflow})))
+            .then(() =>
+                services.archivedWorkflows.get(this.uid).then(workflow =>
+                    this.setState({
+                        error: null,
+                        workflow
+                    })
+                )
+            )
             .catch(error => this.setState({error}));
     }
 
@@ -106,11 +117,15 @@ export class ArchivedWorkflowDetails extends BasePage<RouteComponentProps<any>, 
                         items
                     },
                     breadcrumbs: [
+                        {title: 'Archived Workflows', path: uiUrl('archived-workflows')},
                         {
-                            title: 'Archived Workflows',
-                            path: uiUrl('archived-workflows/')
+                            title: this.namespace,
+                            path: uiUrl('archived-workflows/' + this.namespace)
                         },
-                        {title: this.uid}
+                        {
+                            title: this.uid,
+                            path: uiUrl('archived-workflows/' + this.namespace + '/' + this.uid)
+                        }
                     ],
                     tools: (
                         <div className='workflow-details__topbar-buttons'>

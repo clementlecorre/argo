@@ -76,9 +76,10 @@ export const exampleWorkflowTemplate = (namespace: string): WorkflowTemplate => 
     }
 });
 
-export const exampleCronWorkflow = (): CronWorkflow => ({
+export const exampleCronWorkflow = (namespace: string): CronWorkflow => ({
     metadata: {
         name: randomSillyName(),
+        namespace,
         labels
     },
     spec: {

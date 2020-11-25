@@ -69,7 +69,14 @@ export class Reports extends BasePage<RouteComponentProps<any>, State> {
         return (
             <Consumer>
                 {ctx => (
-                    <Page title='Reports' toolbar={{breadcrumbs: [{title: 'Reports', path: uiUrl('/reports/' + this.state.namespace)}]}}>
+                    <Page
+                        title='Reports'
+                        toolbar={{
+                            breadcrumbs: [
+                                {title: 'Reports', path: uiUrl('reports')},
+                                {title: this.state.namespace, path: uiUrl('reports/' + this.state.namespace)}
+                            ]
+                        }}>
                         {this.renderFilters()}
                         {this.renderReport(ctx)}
                     </Page>

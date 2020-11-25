@@ -23,11 +23,15 @@ export const CronWorkflowEditor = (props: {
             selectedTabKey={props.selectedTabKey}
             onTabSelected={props.onTabSelected}
             tabs={[
-                {
-                    key: 'status',
-                    title: 'Status',
-                    content: <CronWorkflowStatusViewer spec={props.cronWorkflow.spec} status={props.cronWorkflow.status} />
-                },
+                ...(props.cronWorkflow.status
+                    ? [
+                          {
+                              key: 'status',
+                              title: 'Status',
+                              content: <CronWorkflowStatusViewer spec={props.cronWorkflow.spec} status={props.cronWorkflow.status} />
+                          }
+                      ]
+                    : []),
                 {
                     key: 'cron',
                     title: 'Cron',
