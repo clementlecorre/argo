@@ -22,6 +22,7 @@ export const ClusterWorkflowTemplateCreator = (props: {onCreate: (workflow: Clus
                         services.clusterWorkflowTemplate
                             .create(template)
                             .then(props.onCreate)
+                            .then(() => setError(null))
                             .catch(setError);
                     }}>
                     Create

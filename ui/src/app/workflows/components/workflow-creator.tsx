@@ -22,6 +22,7 @@ export const WorkflowCreator = (props: {namespace: string; onCreate: (workflow: 
                         services.workflowTemplate
                             .create(workflow, workflow.metadata.namespace)
                             .then(props.onCreate)
+                            .then(() => setError(null))
                             .catch(setError);
                     }}>
                     Create

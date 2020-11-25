@@ -49,6 +49,7 @@ export const WorkflowTemplateDetails = (props: RouteComponentProps<any>) => {
             .get(name, namespace)
             .then(setTemplate)
             .then(() => setEdited(false)) // set back to false
+            .then(() => setError(null))
             .catch(setError);
     }, [name, namespace]);
 
@@ -77,9 +78,9 @@ export const WorkflowTemplateDetails = (props: RouteComponentProps<any>) => {
                                 services.workflowTemplate
                                     .update(template, name, namespace)
                                     .then(setTemplate)
-                                    .then(() => setError(null))
                                     .then(() => notifications.show({content: 'Updated', type: NotificationType.Success}))
                                     .then(() => setEdited(false))
+                                    .then(() => setError(null))
                                     .catch(setError)
                         },
                         {
@@ -93,6 +94,7 @@ export const WorkflowTemplateDetails = (props: RouteComponentProps<any>) => {
                                 services.workflowTemplate
                                     .delete(name, namespace)
                                     .then(() => navigation.goto(uiUrl('workflow-templates')))
+                                    .then(() => setError(null))
                                     .catch(setError);
                             }
                         }

@@ -41,6 +41,7 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
             .get(name)
             .then(setTemplate)
             .then(() => setEdited(false)) // set back to false
+            .then(() => setError(null))
             .catch(setError);
     }, []);
 
@@ -48,6 +49,7 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
         services.info
             .getInfo()
             .then(info => setNamespace(info.managedNamespace || Utils.getCurrentNamespace() || 'default'))
+            .then(() => setError(null))
             .catch(setError);
     }, []);
 
@@ -75,13 +77,13 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
                                 services.clusterWorkflowTemplate
                                     .update(template, name)
                                     .then(setTemplate)
-                                    .then(() => setError(null))
                                     .then(() =>
                                         notifications.show({
                                             content: 'Updated',
                                             type: NotificationType.Success
                                         })
                                     )
+                                    .then(() => setError(null))
                                     .catch(setError);
                             }
                         },
@@ -96,6 +98,7 @@ export const ClusterWorkflowTemplateDetails = (props: RouteComponentProps<any>) 
                                 services.clusterWorkflowTemplate
                                     .delete(name)
                                     .then(() => navigation.goto(uiUrl('cluster-workflow-templates')))
+                                    .then(() => setError(null))
                                     .catch(setError);
                             }
                         }

@@ -59,6 +59,8 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                       services.cronWorkflows
                           .suspend(name, namespace)
                           .then(setCronWorkflow)
+                          .then(() => setEdited(false))
+                          .then(() => setError(null))
                           .catch(setError),
                   disabled: !cronWorkflow || edited
               }
@@ -69,6 +71,8 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                       services.cronWorkflows
                           .resume(name, namespace)
                           .then(setCronWorkflow)
+                          .then(() => setEdited(false))
+                          .then(() => setError(null))
                           .catch(setError),
                   disabled: !cronWorkflow || !cronWorkflow.spec.suspend || edited
               };
@@ -91,6 +95,7 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                                 services.workflows
                                     .submit('cronwf', name, namespace)
                                     .then(wf => navigation.goto(uiUrl(`workflows/${wf.metadata.namespace}/${wf.metadata.name}`)))
+                                    .then(() => setError(null))
                                     .catch(setError)
                         },
                         {
@@ -114,6 +119,7 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                                     )
                                     .then(setCronWorkflow)
                                     .then(() => notifications.show({content: 'Updated', type: NotificationType.Success}))
+                                    .then(() => setError(null))
                                     .catch(setError);
                             }
                         },
@@ -128,6 +134,7 @@ export const CronWorkflowDetails = (props: RouteComponentProps<any>) => {
                                 services.cronWorkflows
                                     .delete(name, namespace)
                                     .then(() => navigation.goto(uiUrl('cron-workflows')))
+                                    .then(() => setError(null))
                                     .catch(setError);
                             }
                         },

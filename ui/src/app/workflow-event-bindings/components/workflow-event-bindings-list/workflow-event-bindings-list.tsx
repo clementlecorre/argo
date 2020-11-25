@@ -49,6 +49,7 @@ export const WorkflowEventBindingsList = (props: RouteComponentProps<any>) => {
         services.event
             .listWorkflowEventBindings(namespace)
             .then(list => setWorkflowEventBindings(list.items || []))
+            .then(() => setError(null))
             .catch(setError);
     }, [namespace]);
 
@@ -56,6 +57,10 @@ export const WorkflowEventBindingsList = (props: RouteComponentProps<any>) => {
         <Page
             title='Workflow Event Bindings'
             toolbar={{
+                breadcrumbs: [
+                    {title: 'Workflow Event Bindings', path: uiUrl('workflow-event-bindings')},
+                    {title: namespace, path: uiUrl('workflow-event-bindings/' + namespace)}
+                ],
                 tools: [<NamespaceFilter key='namespace-filter' value={namespace} onChange={setNamespace} />]
             }}>
             <ErrorNotice error={error} style={{margin: 20}} />

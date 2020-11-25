@@ -8,7 +8,10 @@ export const DataLoaderDropdown = (props: {load: Promise<string[]>; onChange: (v
     const [selected, setSelected] = useState('');
 
     useState(() => {
-        props.load.then(setList).catch(setError);
+        props.load
+            .then(setList)
+            .then(() => setError(null))
+            .catch(setError);
     });
 
     return (
